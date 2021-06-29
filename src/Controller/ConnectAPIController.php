@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+// Moje Models
+use App\Model\ApiEndpoints\GetOrders;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ConnectAPIController extends AbstractController
 {
@@ -29,77 +33,87 @@ class ConnectAPIController extends AbstractController
      * Get OAuth Access Token (long-term secret token)
      * INSTALACIA
      */
-    $code = $_GET['code'];
+    // $code = $_GET['code'];
 
-    $oAuthRequest = [
-        'code' => $code,
-        'grant_type' =>  'authorization_code',
-        'client_id' => $clientId,
-        'client_secret' => $clientSecret,
-        'redirect_uri' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'],
-        'scope' => 'api'
-    ];
+    // $oAuthRequest = [
+    //     'code' => $code,
+    //     'grant_type' =>  'authorization_code',
+    //     'client_id' => $clientId,
+    //     'client_secret' => $clientSecret,
+    //     'redirect_uri' => $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'],
+    //     'scope' => 'api'
+    // ];
 
-    $curl = curl_init($oAuthServer);
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $oAuthRequest);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    $jsonOAuthResponse = curl_exec($curl);
-    $statusCode = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
-    curl_close($curl);
+    // $curl = curl_init($oAuthServer);
+    // curl_setopt($curl, CURLOPT_POST, true);
+    // curl_setopt($curl, CURLOPT_POSTFIELDS, $oAuthRequest);
+    // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    // $jsonOAuthResponse = curl_exec($curl);
+    // $statusCode = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
+    // curl_close($curl);
 
-    $oAuthResponse = json_decode($jsonOAuthResponse, true);
-    save('OAuth Access Token (permanent)', $statusCode, $oAuthResponse);
-    $oauthAccessToken = $oAuthResponse['access_token'];  // secret permanent token
+    // $oAuthResponse = json_decode($jsonOAuthResponse, true);
+    // save('OAuth Access Token (permanent)', $statusCode, $oAuthResponse);
+    // $oauthAccessToken = $oAuthResponse['access_token'];  // secret permanent token
 
-		print_r($oAuthResponse);
+		// print_r($oAuthResponse);
 
-    return $this->render('index/index.html.twig', [
-        'controller_name' => 'ConnectAPIController',
-    	]);
+    // return $this->render('index/index.html.twig', [
+    //     'controller_name' => 'ConnectAPIController',
+    // 	]);
+
+    echo "tu sa nainstaluje doplnok + e-shop <br>";
+    return $this->getApiAccesToken();
+      
 	}
 
 
-  public function getApiAccesToken(): Response
+  public function getApiAccesToken(): RedirectResponse
   {
     /**
      * Get API Access Token (short-term access token)
      */
-    $curl = curl_init($apiAccessTokenUrl);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $oauthAccessToken]);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    $jsonAccessTokenResponse = curl_exec($curl);
-    $statusCode = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
-    curl_close($curl);
+    // $curl = curl_init($apiAccessTokenUrl);
+    // curl_setopt($curl, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $oauthAccessToken]);
+    // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    // $jsonAccessTokenResponse = curl_exec($curl);
+    // $statusCode = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
+    // curl_close($curl);
 
-    $accessTokenResponse = json_decode($jsonAccessTokenResponse, true);
-    save('Access Token (valid for 30 minutes)', $statusCode, $accessTokenResponse);
-    $apiAccessToken = $accessTokenResponse['access_token']; // short term token
+    // $accessTokenResponse = json_decode($jsonAccessTokenResponse, true);
+    // save('Access Token (valid for 30 minutes)', $statusCode, $accessTokenResponse);
+    // $apiAccessToken = $accessTokenResponse['access_token']; // short term token
 
-		print_r($accessTokenResponse);
+		// print_r($accessTokenResponse);
+
+    echo "tu bude ziskanie docasneho OAuth a jeho rekapitulacia <br>";
+    $this->getAllOrders();
+    return $this->redirectToRoute('index', [], 301);
+
 
   }
 
-
-  public function getEshopIdentity() : Response
+  /**
+   * @Route("/api/all-orders", name="allOrders")
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   */
+  public function getAllOrders()
   {
     /**
-     * Get eshop identity - call API
+     * Get Orders z Model GetOrders.php
      */
-    $curl = curl_init("https://api.myshoptet.com/api/eshop");
-    curl_setopt($curl, CURLOPT_HTTPHEADER, [
-      "Shoptet-Access-Token: $apiAccessToken",
-        "Content-Type: application/vnd.shoptet.v1.0"
-    ]);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    $jsonEndpointResponse = curl_exec($curl);
-    $endpointResponse = json_decode($jsonEndpointResponse, true);
-    $statusCode = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
-    curl_close($curl);
+    $accessToken = "450738-a-644-x0z2mjdnlkcpxqlbr8x77ljpew2m4zz0";
 
-    save('Eshop info', $statusCode, $endpointResponse);
-    $eshopId = $data['data']['contactInformation']['eshopId'];
+    $getOrders = new GetOrders;
+    $allOrders = $getOrders->getOrders($accessToken);
 
-		print_r($endpointResponse);
+    $response = new Response();
+    $response->headers->set('Content-Type', 'application/json');
+    $response->headers->set('Access-Control-Allow-Origin', '*');
+    $response->setContent(json_encode($allOrders));
+
+    return $response;
+    
+
   }
 }

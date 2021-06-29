@@ -3,10 +3,11 @@ import axios from 'axios'
 
 //moje komponenty
 import Orders from '../components/table/Orders'
+import { GridRowId } from '@material-ui/data-grid'
 
 
 interface Props {
-  checkoutOrders: (arr: []) => void
+  checkoutOrders: (arr: GridRowId[]) => void
 }
 
 const OrdersPage = (props: Props) => {
@@ -16,14 +17,14 @@ const OrdersPage = (props: Props) => {
 
   useEffect(() => {
     axios.get(
-      'http://symfony/api/users'
+      'http://symfony/api/all-orders'
     ).then(response=>{
-      setOrders(response.data)
+      setOrders(response.data.data.orders)
     })
   }, [])
 
 
-  const handleCheckoutOrders = (arr:[]) => {
+  const handleCheckoutOrders = (arr:GridRowId[]) => {
     sendCheckoutOrders(arr)
   }
 

@@ -6,6 +6,7 @@ import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
 import OrdersPage from './views/OrdersPage'
 import CheckoutPage from './views/CheckoutPage'
+import { GridRowId } from '@material-ui/data-grid'
 
 interface Props {
     
@@ -15,7 +16,7 @@ const App = (props: Props) => {
   //useState
   const [checkoutOrders, setCheckoutOrders] = useState([])
 
-  const handleCheckoutOrders = (arr:[]) => {
+  const handleCheckoutOrders = (arr:GridRowId[]) => {
     setCheckoutOrders(arr)
   }
 

@@ -1,3 +1,4 @@
+import { GridRowId } from '@material-ui/data-grid'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
@@ -5,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import Checkout from '../components/table/Checkout'
 
 interface Props {
-  sendCheckoutID: any[]
+  sendCheckoutID: GridRowId[]
 }
 
 const CheckoutPage = (props: Props) => {
@@ -15,26 +16,24 @@ const CheckoutPage = (props: Props) => {
   const [filteredOrders, setFilteredOrders] = useState([])
 
   useEffect(() => {
-    setCheckoutOrdersID(props.sendCheckoutID)
+    const sendcheckoutID = props.sendCheckoutID
+    setCheckoutOrdersID(sendcheckoutID)
+    console.log(checkoutOrdersID)
     axios.get(
-      'http://symfony/api/users'
+      'http://symfony/api/all-orders'
     ).then(response=>{
-      
-    // sluzi na filtraciu objednavok podla ID
-    setAllOrders(response.data)
-    // @ts-ignore
-
-    setFilteredOrders(allOrders.filter( row => checkoutOrdersID.includes(Number(row.id)) ))
-
+      setAllOrders(response.data.data.orders)
     })
+    // setFilteredOrders(allOrders.filter( row => checkoutOrdersID.includes(Number(row.id)) ))
+
   }, [props.sendCheckoutID])
 
-  console.log("-----------ALLORDERS------------")
-  console.log(allOrders)
-  console.log("-----------ID------------")
-  console.log(checkoutOrdersID)
-  console.log("-----------FILTEREDORDERS------------")
-  console.log(filteredOrders)
+  // console.log("-----------ALLORDERS------------")
+  // console.log(allOrders)
+  // console.log("-----------ID------------")
+  // console.log(checkoutOrdersID)
+  // console.log("-----------FILTEREDORDERS------------")
+  // console.log(filteredOrders)
   // console.log("-----------IDrozlozene------------")
   // console.log(checkoutOrdersID)
 
