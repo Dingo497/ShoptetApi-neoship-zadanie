@@ -5,44 +5,71 @@ import React, { useEffect, useState } from 'react'
 //moje komponenty
 import Checkout from '../components/table/Checkout'
 
+
 interface Props {
-  sendCheckoutID: GridRowId[]
+
 }
 
 const CheckoutPage = (props: Props) => {
   //constant
-  const [checkoutOrdersID, setCheckoutOrdersID] = useState([])
-  const [allOrders, setAllOrders] = useState([])
-  const [filteredOrders, setFilteredOrders] = useState([])
+  const [allOrdersWithId, setallOrdersWithId] = useState([])
+  const [checkoutOrdersid, setcheckoutOrdersid] = useState([])
+  const [filteredOrders, setfilteredOrders] = useState([])
 
   useEffect(() => {
-    const sendcheckoutID = props.sendCheckoutID
-    setCheckoutOrdersID(sendcheckoutID)
-    console.log(checkoutOrdersID)
+    setcheckoutOrdersid(JSON.parse(localStorage.getItem('checkoutOrdersId')))
+  }, [localStorage.getItem('checkoutOrdersId')])
+
+  useEffect(() => {
     axios.get(
       'http://symfony/api/all-orders'
     ).then(response=>{
-      setAllOrders(response.data.data.orders)
+      const allOrders = response.data.data.orders
+      // uprava pola podla poziadaviek DataGrid
+      setallOrdersWithId(allOrders.map((order: any, index: number) => {
+        order.id = index + 1
+        order.priceWithVat = order.price.withVat
+        order.priceWithoutVat = order.price.withoutVat
+        order.priceVat = order.price.vat
+        order.priceCurrencyCode = order.price.currencyCode
+        order.priceExchangeRate = order.price.exchangeRate
+        order.price = order.price.toPay
+        order.statusId = order.status.id
+        order.status = order.status.name
+        let creationTime  = order.creationTime.replaceAll('-', '.')
+        creationTime = creationTime.split('+0', 1)[0]
+        order.creationTime = creationTime.replaceAll('T', ' / ')
+        return order
+      }))
     })
-    // setFilteredOrders(allOrders.filter( row => checkoutOrdersID.includes(Number(row.id)) ))
+    }, [])
 
-  }, [props.sendCheckoutID])
+    useEffect(() => {
+      const filtered = allOrdersWithId.filter(order => checkoutOrdersid.includes(order.id))
+      setfilteredOrders(filtered)
+    }, [allOrdersWithId])
 
-  // console.log("-----------ALLORDERS------------")
-  // console.log(allOrders)
-  // console.log("-----------ID------------")
-  // console.log(checkoutOrdersID)
-  // console.log("-----------FILTEREDORDERS------------")
-  // console.log(filteredOrders)
-  // console.log("-----------IDrozlozene------------")
-  // console.log(checkoutOrdersID)
-
-//allOrders.filter( row => checkoutOrdersID.includes(Number(row.id)) )
   return (
     <div>
-        <Checkout checkoutOrders={allOrders} />
+        <Checkout checkoutOrders={filteredOrders} />
     </div>
   )
 }
 
 export default CheckoutPage
+
+
+
+
+
+/**
+ * TODO
+ * --> Spravit nacitavadlo a opravit nacitavadlo v checkoutpagei
+ * --> Spravit ked uziv. zaznaci objednavky kt da do checkout
+ * aby ked sa vypisu do checkout a vrati sa uzivatel na orderspage
+ * tak nech tie dane objednavky ostanu zaskrtnute
+ * --> skusit premenovat/odstranit rozsirujuce matuce filtre z tabulky
+ * --> Spravit po kliknuti na import v checkout aby sa zavolalo z 
+ * shoptet API detaily objednavok ktore su v checkout a tie vypisalo
+ * do conzoly (udaje kt mi zadali v neoshipe)
+ */

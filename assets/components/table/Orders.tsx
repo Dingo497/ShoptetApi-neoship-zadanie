@@ -37,22 +37,7 @@ const Orders = (props: Props) => {
       <div>nacitavam</div>
     )
   }
-  // uprava pola podla poziadaviek DataGrid
-  const ordersWithID = orders.map((order, index) => {
-    order.id = index + 1
-    order.priceWithVat = order.price.withVat
-    order.priceWithoutVat = order.price.withoutVat
-    order.priceVat = order.price.vat
-    order.priceCurrencyCode = order.price.currencyCode
-    order.priceExchangeRate = order.price.exchangeRate
-    order.price = order.price.toPay
-    order.statusId = order.status.id
-    order.status = order.status.name
-    let creationTime  = order.creationTime.replaceAll('-', '.')
-    creationTime = creationTime.split('+0', 1)[0]
-    order.creationTime = creationTime.replaceAll('T', ' / ')
-    return order
-  })
+
   const checkoutOrders = props.ArrCheckoutOrders
   const classes = useStyles();
 
@@ -107,23 +92,6 @@ const Orders = (props: Props) => {
     },
   ]
 
-
-
-
-/**
- * TODO
- * - upravit vykreslenie datumu (OK)
- * - opravit selected v orders
- * - vypisat selected do checkout
- * - vypisanie do checkout cez filter by ID
- * - farby zmenit v kazdom druhom riadku
- */
-
-
-
-
-
-
   // odchytenie objednavok do checkout
   const handleSelectedRows = (data:GridSelectionModelChangeParams) => {
     checkoutOrders(data.selectionModel)
@@ -136,7 +104,7 @@ const Orders = (props: Props) => {
         <DataGrid
           className={classes.root}
           autoHeight
-          rows={ordersWithID}
+          rows={orders}
           columns={columns}
           pageSize={30}
           checkboxSelection
@@ -144,7 +112,7 @@ const Orders = (props: Props) => {
           disableSelectionOnClick
         />
       </div>
-    <Button component={Link} className={classes.Link} to={'/checkout'} >Checkout</Button>
+    <Button component={Link} className={classes.Link} to={'/checkout'} >Skontrolovať / Zmeniť</Button>
   </div>
   )
 }

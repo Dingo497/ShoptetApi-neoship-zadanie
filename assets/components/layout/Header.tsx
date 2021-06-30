@@ -40,8 +40,8 @@ const Header = (props: Props) => {
           <img src="https://info.neoship.sk/assets/img/logo-intro.png" 
           alt="logo" className={classes.logo} />
           <nav>
-            <Button className={classes.NavLinks} color="inherit" component={NavLink} exact to={"/"}>Orders</Button>
-            <Button className={classes.NavLinks} color="inherit" component={NavLink} to={"/checkout"}>Checkout</Button>
+            <Button className={classes.NavLinks} color="inherit" component={NavLink} exact to={"/"}>Objednávky</Button>
+            <Button className={classes.NavLinks} color="inherit" component={NavLink} to={"/checkout"}>Kontrola</Button>
           </nav>
         </Toolbar>
       </AppBar>
