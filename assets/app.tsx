@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
+import { GridRowId } from '@material-ui/data-grid'
 
 //moje komponenty
 import Header from './components/layout/Header'
@@ -12,15 +13,25 @@ interface Props {
 }
 
 const App = (props: Props) => {
+  const [checkoutOrdersToHeader, setcheckoutOrdersToHeader] = useState<GridRowId[]>([])
+
+  const handleCheckoutOrdersToHeader = (arr: GridRowId[]) => {
+    setcheckoutOrdersToHeader(arr)
+  }
 
   return (
     <div>
-      <Header/>
+      <Header ArrCheckoutOrders={checkoutOrdersToHeader} />
 
       <main>
-        <Switch>
-          <Route path="/" exact component={OrdersPage} />
-          <Route path="/checkout" exact component={CheckoutPage} />
+        <Switch>ArrCheckoutOrders
+          <Route path="/" exact render={() => <OrdersPage ArrCheckoutOrders={handleCheckoutOrdersToHeader} /> } />
+          {/* Ak je nieco selected pusti na stranku inak nie */}
+          {checkoutOrdersToHeader.length > 0 ? (
+            <Route path="/checkout" exact component={CheckoutPage} />
+          ) : (
+            <Redirect to="/" />
+          )}
         </Switch>
       </main>
 

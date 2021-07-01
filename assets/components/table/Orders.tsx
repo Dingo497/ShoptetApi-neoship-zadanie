@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 
 // material UI
@@ -6,10 +6,10 @@ import { DataGrid, GridColDef, GridRowId, GridSelectionModelChangeParams } from 
 import { Button, createStyles, makeStyles, Theme } from '@material-ui/core';
 
 // moje interfaces
-// import { ArrayOfOrders } from '../../types'
+import { allOrders } from '../../types'
 
 interface Props {
-  ArrOrders:any[],
+  ArrOrders:allOrders[],
   ArrCheckoutOrders: (arr: GridRowId[]) => void
 }
 
@@ -30,14 +30,17 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Orders = (props: Props) => {
 
-  // constant
+  // konstanty
   const orders = props.ArrOrders
+  // nacitavanie
   if (orders == undefined){
     return (
       <div>nacitavam</div>
     )
   }
-
+  // konstanty
+  const [ifIsSelected, setIfIsSelected] = useState(true)
+  const [rememberSelectedRows, setRememberSelectedRows] = useState([])
   const checkoutOrders = props.ArrCheckoutOrders
   const classes = useStyles();
 
@@ -95,7 +98,21 @@ const Orders = (props: Props) => {
   // odchytenie objednavok do checkout
   const handleSelectedRows = (data:GridSelectionModelChangeParams) => {
     checkoutOrders(data.selectionModel)
+    if( data.selectionModel.length === 0 ){
+      setIfIsSelected(true)
+    }else{
+      setIfIsSelected(false)
+    }
   }
+
+  // sluzi na zapametanie selected objednavky
+  useEffect(() => {
+    if(localStorage.getItem('checkoutOrdersId').length >= 3){
+      setRememberSelectedRows(JSON.parse(localStorage.getItem('checkoutOrdersId')))
+    }else{
+      setRememberSelectedRows([])
+    }
+  }, [])
 
   // render
   return (
@@ -107,12 +124,18 @@ const Orders = (props: Props) => {
           rows={orders}
           columns={columns}
           pageSize={30}
+          selectionModel={ rememberSelectedRows }
           checkboxSelection
           onSelectionModelChange={handleSelectedRows}
-          disableSelectionOnClick
+          
         />
       </div>
-    <Button component={Link} className={classes.Link} to={'/checkout'} >Skontrolovať / Zmeniť</Button>
+    <Button 
+      component={Link} 
+      className={classes.Link} 
+      to={'/checkout'}  
+      disabled={ ifIsSelected }
+      >Skontrolovať / Zmeniť</Button>
   </div>
   )
 }

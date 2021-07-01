@@ -5,17 +5,20 @@ import axios from 'axios'
 import Orders from '../components/table/Orders'
 import { GridRowId } from '@material-ui/data-grid'
 
+// moje interfaces
+import { allOrders } from '../types'
 
 interface Props {
-
+  ArrCheckoutOrders: (arr: GridRowId[]) => void
 }
 
 const OrdersPage = (props: Props) => {
   //constant
-  const [orders, setOrders] = useState()
+  const [orders, setOrders] = useState<allOrders[]>()
   const [checkoutOrdersId, setcheckoutOrdersId] = useState(
     localStorage.getItem('checkoutOrdersId') || ''
   )
+  const checkoutOrders = props.ArrCheckoutOrders
 
   useEffect(() => {
     if(orders == undefined){
@@ -45,6 +48,7 @@ const OrdersPage = (props: Props) => {
 
   const handleCheckoutOrders = (arr:GridRowId[]) => {
     setcheckoutOrdersId(JSON.stringify(arr))
+    checkoutOrders(arr)
   }
 
   useEffect(() => {
