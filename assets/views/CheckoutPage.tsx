@@ -59,21 +59,3 @@ const CheckoutPage = (props: Props) => {
 }
 
 export default CheckoutPage
-
-
-
-
-
-/**
- * TODO
- * --> Spravit nacitavadlo a opravit nacitavadlo v checkoutpagei
- * --> Spravit ked uziv. zaznaci objednavky kt da do checkout
- * aby ked sa vypisu do checkout a vrati sa uzivatel na orderspage
- * tak nech tie dane objednavky ostanu zaskrtnute (OK)
- * --> Spravit ked nieje nic zaznacene v objednavkach nech sa
- * nedostane do KONTROLY ani tlacidlo kontrola / zmenit
- * --> skusit premenovat/odstranit rozsirujuce matuce filtre z tabulky
- * --> Spravit po kliknuti na import v checkout aby sa zavolalo z 
- * shoptet API detaily objednavok ktore su v checkout a tie vypisalo
- * do conzoly (udaje kt mi zadali v neoshipe)
- */

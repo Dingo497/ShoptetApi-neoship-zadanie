@@ -1,12 +1,13 @@
 import React, { useCallback, useState } from 'react'
-import { Link } from 'react-router-dom'
+import axios from 'axios'
 
 // material UI
-import { DataGrid, getRowEl, GridColDef } from '@material-ui/data-grid'
+import { DataGrid, GridColDef } from '@material-ui/data-grid'
 import { Button, createStyles, makeStyles, Theme } from '@material-ui/core'
 
 // moje interfaces
 import { allOrders } from '../../types'
+import { Link } from 'react-router-dom'
 
 
 interface Props {
@@ -20,7 +21,13 @@ const useStyles = makeStyles((theme: Theme) =>
     Link: {
       background:'#e8dccc',
       margin: 5,
+      fontSize: 17
     },
+    root: {
+      '& .MuiDataGrid-row.Mui-even:not(:hover)': {
+        backgroundColor: theme.palette.type === 'light' ? 'rgba(0, 0, 0, 0.04)' : '#e8dccc',
+      },
+    }
   }))
 
 
@@ -28,13 +35,22 @@ const Checkout = (props: Props) => {
   //constant
   const stateCheckoutOrders = props.checkoutOrders
   if(stateCheckoutOrders.length === 0){
+    const loading = {
+      display: 'block',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      marginTop: '5%'
+    }
     return (
-      <div>nacitavam</div>
+        <img src={require('../../img/Spin-1s-120px.gif')} 
+            alt="Loading" style={loading} />
     )
   }
   const [checkoutOrders, setCheckoutOrders] = useState(stateCheckoutOrders)
+  const [finnalyResultArr, setFinnalyResultArr] = useState([])
   const classes = useStyles();
 
+  // editacia spojenej bunky
   const handleEditCellChangeCommitted = useCallback(
     ({ id, field, props }) => {
       if (field === "fullPrice") {
@@ -52,13 +68,62 @@ const Checkout = (props: Props) => {
     [checkoutOrders]
   );
 
+
+  // Odchytenie a spracovanie noveho pola konecneho
+  const handleImportOrders = () => {
+    const ordersCodes = checkoutOrders.map(order => order.code) 
+    console.log(ordersCodes)
+    console.log('-----------------------')
+
+    axios.get(
+      'http://symfony/api/orders-detail', {
+        headers: {
+          'Orders-Codes': JSON.stringify(ordersCodes),
+        }
+      }).then((response) => {
+
+        //@ts-ignore
+        const finnalyArr = []
+        //@ts-ignore
+        response.data.forEach(orderObj => {
+          const finnalyResult = {
+            reference_number : orderObj.data.order.code,
+            receiver_name : orderObj.data.order.fullName,
+            receiver_company : orderObj.data.order.billingAddress.company,
+            receiver_city : orderObj.data.order.billingAddress.city,
+            receiver_street : orderObj.data.order.billingAddress.street,
+            receiver_house_number : orderObj.data.order.billingAddress.houseNumber,
+            receiver_zip : orderObj.data.order.billingAddress.zip,
+            receiver_state_code : orderObj.data.order.billingAddress.countryCode,
+            receiver_phone: orderObj.data.order.phone,
+            receiver_email : orderObj.data.order.email,
+            cod_price : orderObj.data.order.price.toPay,
+            insurance : orderObj.data.order.billingAddress.additional,
+            cod_reference : 'nwm',
+            cod_currency_code : orderObj.data.order.price.currencyCode
+          }
+          finnalyArr.push(finnalyResult)
+        })
+        /**
+         * treba to uz len dat do Stateu zatial 
+         * to len nahrubo vypisujem
+         */
+        //@ts-ignore
+        console.log(finnalyArr)
+        //@ts-ignore
+        setFinnalyResultArr(finnalyArr)
+      })
+      console.log(finnalyResultArr)
+
+  }
+
   // zadefinovanie header row
   const columns: GridColDef[] = [
-    { field: 'code', headerName: 'Kód', width: 150 },
+    { field: 'code', headerName: 'Kód', flex: 0.8 },
     { 
       field: 'fullName',
       headerName: 'Meno',
-      width: 170,
+      flex: 1,
       type: 'string',
       editable: true
     },
@@ -66,21 +131,20 @@ const Checkout = (props: Props) => {
       field: 'company',
       headerName: 'Spoločnosť',
       type: 'string',
-      width: 170,
-      editable: true
+      editable: true,
+      flex: 1
     },
     {
       field: 'phone',
       headerName: 'Kontakt',
-      width: 170,
+      flex: 1,
       sortable: false,
       editable: true
     },
     {
       field: 'creationTime',
       headerName: 'Dátum vytvorenia',
-      width: 170,
-      type: 'datetime',
+      flex: 1
     },
     {
       field: 'price',
@@ -95,7 +159,7 @@ const Checkout = (props: Props) => {
     {
       field: 'fullPrice',
       headerName: 'Suma s DPH',
-      width: 170,
+      flex: 0.8,
       editable: true,
       valueGetter: (params) =>
         `${params.getValue(params.id, 'price') || ''} ${
@@ -105,7 +169,7 @@ const Checkout = (props: Props) => {
     {
       field: 'status',
       headerName: 'Status',
-      width: 150,
+      flex: 0.8,
       editable:true
     },
   ]
@@ -115,14 +179,19 @@ const Checkout = (props: Props) => {
     <div>
       <div>
         <DataGrid
+          className={classes.root}
           autoHeight
           rows={checkoutOrders}
           columns={columns}
           pageSize={30}
+          disableColumnMenu={true}
           onEditCellChangeCommitted={handleEditCellChangeCommitted}
+          rowHeight={70}
+          density={'comfortable'}
         />
       </div>
-    <Button component={Link} className={classes.Link} to={'/'} >Importovať</Button>
+      {/* onClick={handleImportOrders} */}
+    <Button onClick={handleImportOrders} component={Link} className={classes.Link} to={'/'} >Importovať</Button>
   </div>
   )
 }

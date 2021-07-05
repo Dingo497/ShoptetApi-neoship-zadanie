@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 
 // material UI
-import { DataGrid, GridColDef, GridRowId, GridSelectionModelChangeParams } from '@material-ui/data-grid';
+import { DataGrid, GridColDef, GridResizeParams, GridRowId, GridSelectionModelChangeParams } from '@material-ui/data-grid';
 import { Button, createStyles, makeStyles, Theme } from '@material-ui/core';
 
 // moje interfaces
@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
     Link: {
       background:'#e8dccc',
       margin: 5,
+      fontSize: 17
     },
     root: {
       '& .MuiDataGrid-row.Mui-even:not(:hover)': {
@@ -34,8 +35,15 @@ const Orders = (props: Props) => {
   const orders = props.ArrOrders
   // nacitavanie
   if (orders == undefined){
+    const loading = {
+      display: 'block',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      marginTop: '5%'
+    }
     return (
-      <div>nacitavam</div>
+        <img src={require('../../img/Spin-1s-120px.gif')} 
+            alt="Loading" style={loading} />
     )
   }
   // konstanty
@@ -43,57 +51,57 @@ const Orders = (props: Props) => {
   const [rememberSelectedRows, setRememberSelectedRows] = useState([])
   const checkoutOrders = props.ArrCheckoutOrders
   const classes = useStyles();
-
   // zadefinovanie header row
-  const columns: GridColDef[] = [
-    { field: 'code', headerName: 'Kód', width: 150 },
-    { 
-      field: 'fullName',
-      headerName: 'Meno',
-      width: 170,
-      type: 'string',
-    },
-    {
-      field: 'company',
-      headerName: 'Spoločnosť',
-      type: 'string',
-      width: 170,
-    },
-    {
-      field: 'phone',
-      headerName: 'Kontakt',
-      width: 170,
-      sortable: false,
-    },
-    {
-      field: 'creationTime',
-      headerName: 'Dátum vytvorenia',
-      width: 170,
-      type: 'datetime',
-    },
-    {
-      field: 'price',
-      hide: true
-    },
-    {
-      field: 'priceCurrencyCode',
-      hide: true
-    },
-    {
-      field: 'fullPrice',
-      headerName: 'Suma s DPH',
-      width: 170,
-      valueGetter: (params) =>
-        `${params.getValue(params.id, 'price') || ''} ${
-          params.getValue(params.id, 'priceCurrencyCode') || ''
-        }`,
-    },
-    {
-      field: 'status',
-      headerName: 'Status',
-      width: 150,
-    },
-  ]
+  const [columns, setcolumns] = useState<GridColDef[]>(
+    [
+      { field: 'code', headerName: 'Kód', flex: 0.8 },
+      { 
+        field: 'fullName',
+        headerName: 'Meno',
+        flex: 1,
+        type: 'string',
+      },
+      {
+        field: 'company',
+        headerName: 'Spoločnosť',
+        type: 'string',
+        flex: 1,
+      },
+      {
+        field: 'phone',
+        headerName: 'Kontakt',
+        flex: 1,
+        sortable: false,
+      },
+      {
+        field: 'creationTime',
+        headerName: 'Dátum vytvorenia',
+        flex: 1,
+      },
+      {
+        field: 'price',
+        hide: true
+      },
+      {
+        field: 'priceCurrencyCode',
+        hide: true
+      },
+      {
+        field: 'fullPrice',
+        headerName: 'Suma s DPH',
+        flex: 0.8,
+        valueGetter: (params) =>
+          `${params.getValue(params.id, 'price') || ''} ${
+            params.getValue(params.id, 'priceCurrencyCode') || ''
+          }`,
+      },
+      {
+        field: 'status',
+        headerName: 'Status',
+        flex: 0.8
+      },
+    ]
+  )
 
   // odchytenie objednavok do checkout
   const handleSelectedRows = (data:GridSelectionModelChangeParams) => {
@@ -114,6 +122,27 @@ const Orders = (props: Props) => {
     }
   }, [])
 
+  // sluzi na sledovanie sirky obrazovky a ked dosiahne 1000px
+  // tabulka sa zmeni z flex na posuvnu
+  // nedokoncene
+  const checkWidth = (param: GridResizeParams) => {
+    if(param.containerSize.width <= 1000){
+      columns.map((column) => {
+        delete(column.flex)
+        column.width = 120
+        return column
+      })
+      setcolumns(columns)
+      // console.log(columns)
+    }
+  }
+
+  // useEffect(() => {
+  //   console.log('zmenil soms a')
+  // }, [columns])
+
+
+
   // render
   return (
     <div>
@@ -126,8 +155,11 @@ const Orders = (props: Props) => {
           pageSize={30}
           selectionModel={ rememberSelectedRows }
           checkboxSelection
+          disableColumnMenu={true}
           onSelectionModelChange={handleSelectedRows}
-          
+          density={'comfortable'}
+          rowHeight={70}
+          onResize={checkWidth}
         />
       </div>
     <Button 

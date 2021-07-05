@@ -15,11 +15,8 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       flexGrow: 1,
     },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
     logo: {
-      maxWidth: 120,
+      maxWidth: 170,
       margin: 10,
     },
     NavLinks: {
@@ -27,6 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
         background:'#e8dccc',
       },
       margin: 5,
+      fontSize: 17
     }
   }),
 );
@@ -49,7 +47,7 @@ const Header = (props: Props) => {
     <div className={classes.root}>
       <AppBar position="static" color="inherit">
         <Toolbar>
-          <img src="https://info.neoship.sk/assets/img/logo-intro.png" 
+          <img src={require('../../img/logo-intro.png')} 
           alt="logo" className={classes.logo} />
           <nav>
             <Button 

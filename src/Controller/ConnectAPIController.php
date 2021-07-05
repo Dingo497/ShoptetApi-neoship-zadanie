@@ -4,11 +4,13 @@ namespace App\Controller;
 
 // Moje Models
 use App\Model\ApiEndpoints\GetOrders;
+use App\Model\ApiEndpoints\GetOrdersDetails;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class ConnectAPIController extends AbstractController
 {
@@ -90,7 +92,6 @@ class ConnectAPIController extends AbstractController
     $this->getAllOrders();
     return $this->redirectToRoute('index', [], 301);
 
-
   }
 
   /**
@@ -102,7 +103,7 @@ class ConnectAPIController extends AbstractController
     /**
      * Get Orders z Model GetOrders.php
      */
-    $accessToken = "450738-a-644-x0z2mjdnlkcpxqlbr8x77ljpew2m4zz0";
+    $accessToken = "450738-a-644-twrsyh61qwxqyco6cksjbkad2x5m5c1i";
 
     $getOrders = new GetOrders;
     $allOrders = $getOrders->getOrders($accessToken);
@@ -113,7 +114,30 @@ class ConnectAPIController extends AbstractController
     $response->setContent(json_encode($allOrders));
 
     return $response;
-    
+
+  }
+
+  /**
+   * @Route("/api/orders-detail", name="ordersDetail")
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   */
+  public function getOrdersDetails(Request $request)
+  {
+    /**
+     * Get Orders detail z Model GetOrdersDetails.php
+     */
+    $code = json_decode($request->headers->get('Orders-Codes'));
+    $accessToken = "450738-a-644-twrsyh61qwxqyco6cksjbkad2x5m5c1i";
+
+    $getOrders = new getOrdersDetails;
+    $ordersDetails = $getOrders->getOrdersDetails($accessToken, $code);
+
+    $response = new Response();
+    $response->headers->set('Content-Type', 'application/json');
+    $response->headers->set('Access-Control-Allow-Origin', '*');
+    $response->setContent(json_encode($ordersDetails));
+
+    return $response;
 
   }
 }
