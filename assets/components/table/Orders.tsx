@@ -123,8 +123,7 @@ const Orders = (props: Props) => {
   }, [])
 
   // sluzi na sledovanie sirky obrazovky a ked dosiahne 1000px
-  // tabulka sa zmeni z flex na posuvnu
-  // nedokoncene
+  // nieje to najlepsie
   const checkWidth = (param: GridResizeParams) => {
     if(param.containerSize.width <= 1000){
       columns.map((column) => {
@@ -136,11 +135,6 @@ const Orders = (props: Props) => {
       // console.log(columns)
     }
   }
-
-  // useEffect(() => {
-  //   console.log('zmenil soms a')
-  // }, [columns])
-
 
 
   // render

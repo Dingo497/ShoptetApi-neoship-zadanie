@@ -6,10 +6,14 @@ import { NavLink } from 'react-router-dom';
 import { Button } from '@material-ui/core';
 import { GridRowId } from '@material-ui/data-grid';
 
+
+// props
 interface Props {
   ArrCheckoutOrders: GridRowId[]
 }
 
+
+// styles
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -29,10 +33,15 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+
+
 const Header = (props: Props) => {
+  //constant
   const classes = useStyles();
   const [ifIsSelected, setifIsSelected] = useState<boolean>(false)
   const checkoutOrders = props.ArrCheckoutOrders
+
+
 
   // Sledovanie ak sa zmeni selected tak bud disable btn alebo nie
   useEffect(() => {
@@ -43,6 +52,8 @@ const Header = (props: Props) => {
     }
   }, [checkoutOrders])
 
+
+  // render
   return (
     <div className={classes.root}>
       <AppBar position="static" color="inherit">

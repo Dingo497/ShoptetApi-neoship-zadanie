@@ -8,9 +8,13 @@ import { GridRowId } from '@material-ui/data-grid'
 // moje interfaces
 import { allOrders } from '../types'
 
+
+// props
 interface Props {
   ArrCheckoutOrders: (arr: GridRowId[]) => void
 }
+
+
 
 const OrdersPage = (props: Props) => {
   //constant
@@ -20,6 +24,8 @@ const OrdersPage = (props: Props) => {
   )
   const checkoutOrders = props.ArrCheckoutOrders
 
+
+  // zavola vsetky objednavky a zmenim si pole podla seba
   useEffect(() => {
     if(orders == undefined){
       axios.get(
@@ -37,24 +43,32 @@ const OrdersPage = (props: Props) => {
           order.price = order.price.toPay
           order.statusId = order.status.id
           order.status = order.status.name
-          let creationTime  = order.creationTime.replaceAll('-', '.')
-          creationTime = creationTime.split('+0', 1)[0]
-          order.creationTime = creationTime.replaceAll('T', ' / ')
+          let creationTime  = order.creationTime.split('T')
+          creationTime['0'] = creationTime['0'].split('-').reverse().join('-')
+          creationTime['1'] = creationTime['1'].split('+0', 1)[0]
+          creationTime = creationTime.join(' / ')
+          order.creationTime = creationTime.replaceAll('-', '.')
           return order
         }))
       })
     }
   }, [])
 
+
+  // odchitenie zaskrtnutych objednavok
   const handleCheckoutOrders = (arr:GridRowId[]) => {
     setcheckoutOrdersId(JSON.stringify(arr))
     checkoutOrders(arr)
   }
 
+
+  // nastavenie localStorage
   useEffect(() => {
     localStorage.setItem('checkoutOrdersId', checkoutOrdersId)
   }, [handleCheckoutOrders])
 
+
+  // vypis
   return (
     <div>
       <Orders ArrOrders={orders} ArrCheckoutOrders={handleCheckoutOrders}/>
