@@ -1,21 +1,21 @@
 import React, { useCallback, useState } from 'react'
-import axios from 'axios'
 
-// material UI
-import { DataGrid, GridColDef, GridRowParams } from '@material-ui/data-grid'
+// Material UI
+import { DataGrid, GridColDef } from '@material-ui/data-grid'
 import { Button, createStyles, makeStyles, Theme } from '@material-ui/core'
 
-// moje interfaces
-import { allOrders } from '../../types'
+// Moje interfaces
+import { ordersDetail } from '../../types'
 import { Link } from 'react-router-dom'
 
 
+// Props
 interface Props {
-    checkoutOrders: any[]
+    checkoutOrders: ordersDetail[]
 }
 
 
-// styles
+// Styles
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     Link: {
@@ -30,12 +30,13 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   }))
 
+  
 
 const Checkout = (props: Props) => {
-  //constant
+  // Constants
   const stateCheckoutOrders = props.checkoutOrders
   if(stateCheckoutOrders.length === 0){
-    //loading
+    // Loading
     const loading = {
       display: 'block',
       marginLeft: 'auto',
@@ -51,11 +52,11 @@ const Checkout = (props: Props) => {
   const classes = useStyles();
 
 
-  // editacia spojenej bunky
+  // Editacia spojenej bunky a ostatnych buniek
   const handleEditCellChangeCommitted = useCallback(
     ({ id, field, props }) => {
       if (field === "fullPrice") {
-        const data = props // Fix eslint value is missing in prop-types for JS files
+        const data = props 
         const [cod_price, cod_currency_code] = data.value.toString().split(" ");
         const updatedRows = checkoutOrders.map((order) => {
           if (order.id === id) {
@@ -64,33 +65,23 @@ const Checkout = (props: Props) => {
           return order
         });
         setCheckoutOrders(updatedRows)
+      } else {
+        const data:string = props.value.toString()
+        const updatedRows = checkoutOrders.map((order) => {
+          if(order.id === id){
+            const key = Object.keys(order).find(key => key === field)
+            return { ...order, [key]:data}
+          }
+          return order
+        })
+        setCheckoutOrders(updatedRows)
       }
-      // else{
-      //   const data = props
-      //   console.log('id:'+ id)
-      //   console.log('field:'+ field)
-      //   console.log('props:'+ data.value.toString())
-      //   const updatedRows = checkoutOrders.map((order) => {
-      //     if(order.id === id) {
-      //       //@ts-ignore
-      //       const key = Object.keys(order).find(key => key === field)
-      //       return { ...order, key:data.value.toString() }
-      //     }
-      //   })
-      // }
-      // console.log('Checkout Orders v EditCell:')
-      // console.log(checkoutOrders)
-      // console.log('----------------------')
-      /**
-       * POZNAMKA
-       * na pol hotova editacia objednavok
-       */
     },
     [checkoutOrders]
   );
 
 
-  // Odchytenie a vyplutie upraveneho alebo neupraveneho pola
+  // Odchytenie a vypisanie upraveneho alebo neupraveneho pola
   const handleImportOrders = () => {
     console.log('HOTOVY RESULT:')
     console.log(checkoutOrders)
@@ -100,7 +91,7 @@ const Checkout = (props: Props) => {
   }
 
 
-  // zadefinovanie header row
+  // Zadefinovanie header row
   const columns: GridColDef[] = [
     { field: 'reference_number', headerName: 'Kód', flex: 0.8 },
     { 
@@ -170,7 +161,7 @@ const Checkout = (props: Props) => {
   ]
 
   
-  // render
+  // Render
   return (
     <div>
       <div>

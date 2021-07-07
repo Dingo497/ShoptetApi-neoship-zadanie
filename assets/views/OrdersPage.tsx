@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 
-//moje komponenty
-import Orders from '../components/table/Orders'
+// Material UI
 import { GridRowId } from '@material-ui/data-grid'
 
-// moje interfaces
+// Axios
+import axios from 'axios'
+
+// Moje komponenty
+import Orders from '../components/table/Orders'
+
+// Moje interfaces
 import { allOrders } from '../types'
 
 
-// props
+// Props
 interface Props {
   ArrCheckoutOrders: (arr: GridRowId[]) => void
 }
@@ -17,7 +21,7 @@ interface Props {
 
 
 const OrdersPage = (props: Props) => {
-  //constant
+  // Constants
   const [orders, setOrders] = useState<allOrders[]>()
   const [checkoutOrdersId, setcheckoutOrdersId] = useState(
     localStorage.getItem('checkoutOrdersId') || ''
@@ -25,7 +29,7 @@ const OrdersPage = (props: Props) => {
   const checkoutOrders = props.ArrCheckoutOrders
 
 
-  // zavola vsetky objednavky a zmenim si pole podla seba
+  // Zavola vsetky objednavky a zmenim si pole podla seba
   useEffect(() => {
     if(orders == undefined){
       axios.get(
@@ -55,20 +59,20 @@ const OrdersPage = (props: Props) => {
   }, [])
 
 
-  // odchitenie zaskrtnutych objednavok
+  // Odchitenie zaskrtnutych objednavok
   const handleCheckoutOrders = (arr:GridRowId[]) => {
     setcheckoutOrdersId(JSON.stringify(arr))
     checkoutOrders(arr)
   }
 
 
-  // nastavenie localStorage
+  // Nastavenie localStorage
   useEffect(() => {
     localStorage.setItem('checkoutOrdersId', checkoutOrdersId)
   }, [handleCheckoutOrders])
 
 
-  // vypis
+  // Render
   return (
     <div>
       <Orders ArrOrders={orders} ArrCheckoutOrders={handleCheckoutOrders}/>

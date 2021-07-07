@@ -3,7 +3,7 @@
 namespace App\Model\ApiEndpoints;
 
 /**
- * Model na Getnutie vsetkych objednavok
+ * Model na Getnutie detailov objednavok
  */
 class GetOrdersDetails
 {

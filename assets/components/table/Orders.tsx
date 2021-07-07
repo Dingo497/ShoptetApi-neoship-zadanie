@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 
-// material UI
+// Material UI
 import { DataGrid, GridColDef, GridResizeParams, GridRowId, GridSelectionModelChangeParams } from '@material-ui/data-grid';
 import { Button, createStyles, makeStyles, Theme } from '@material-ui/core';
 
-// moje interfaces
+// Moje interfaces
 import { allOrders } from '../../types'
 
+
+// Props
 interface Props {
   ArrOrders:allOrders[],
   ArrCheckoutOrders: (arr: GridRowId[]) => void
 }
 
-// styles
+
+// Styles
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     Link: {
@@ -29,11 +32,11 @@ const useStyles = makeStyles((theme: Theme) =>
   }))
 
 
+  
 const Orders = (props: Props) => {
-
-  // konstanty
+  // Constants
   const orders = props.ArrOrders
-  // nacitavanie
+  // Loading
   if (orders == undefined){
     const loading = {
       display: 'block',
@@ -46,12 +49,13 @@ const Orders = (props: Props) => {
             alt="Loading" style={loading} />
     )
   }
-  // konstanty
   const [ifIsSelected, setIfIsSelected] = useState(true)
   const [rememberSelectedRows, setRememberSelectedRows] = useState([])
   const checkoutOrders = props.ArrCheckoutOrders
   const classes = useStyles();
-  // zadefinovanie header row
+
+
+  // Zadefinovanie header row
   const [columns, setcolumns] = useState<GridColDef[]>(
     [
       { field: 'code', headerName: 'Kód', flex: 0.8 },
@@ -103,7 +107,8 @@ const Orders = (props: Props) => {
     ]
   )
 
-  // odchytenie objednavok do checkout
+
+  // Odchytenie objednavok do sekcie kontroly
   const handleSelectedRows = (data:GridSelectionModelChangeParams) => {
     checkoutOrders(data.selectionModel)
     if( data.selectionModel.length === 0 ){
@@ -113,7 +118,8 @@ const Orders = (props: Props) => {
     }
   }
 
-  // sluzi na zapametanie selected objednavky
+
+  // Sluzi na ulozenie selected objednavky
   useEffect(() => {
     if(localStorage.getItem('checkoutOrdersId').length >= 3){
       setRememberSelectedRows(JSON.parse(localStorage.getItem('checkoutOrdersId')))
@@ -122,22 +128,23 @@ const Orders = (props: Props) => {
     }
   }, [])
 
-  // sluzi na sledovanie sirky obrazovky a ked dosiahne 1000px
-  // nieje to najlepsie
-  const checkWidth = (param: GridResizeParams) => {
-    if(param.containerSize.width <= 1000){
-      columns.map((column) => {
-        delete(column.flex)
-        column.width = 120
-        return column
-      })
-      setcolumns(columns)
-      // console.log(columns)
-    }
-  }
+
+  // sluzi na sledovanie sirky obrazovky a ked dosiahne 1000px...
+  // asi nepouzijem
+  // const checkWidth = (param: GridResizeParams) => {
+  //   if(param.containerSize.width <= 1000){
+  //     columns.map((column) => {
+  //       delete(column.flex)
+  //       column.width = 120
+  //       return column
+  //     })
+  //     setcolumns(columns)
+  //     // console.log(columns)
+  //   }
+  // }
 
 
-  // render
+  // Render
   return (
     <div>
       <div>
@@ -153,7 +160,7 @@ const Orders = (props: Props) => {
           onSelectionModelChange={handleSelectedRows}
           density={'comfortable'}
           rowHeight={70}
-          onResize={checkWidth}
+          // onResize={checkWidth}
         />
       </div>
     <Button 

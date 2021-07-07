@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react'
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
+
+// React router
 import { NavLink } from 'react-router-dom';
-import { Button } from '@material-ui/core';
+
+// Materail UI
+import { AppBar, Button, createStyles, makeStyles, Theme, Toolbar } from '@material-ui/core';
 import { GridRowId } from '@material-ui/data-grid';
 
 
-// props
+// Props
 interface Props {
   ArrCheckoutOrders: GridRowId[]
 }
 
 
-// styles
+// Styles
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 
 const Header = (props: Props) => {
-  //constant
+  // Constants
   const classes = useStyles();
   const [ifIsSelected, setifIsSelected] = useState<boolean>(false)
   const checkoutOrders = props.ArrCheckoutOrders
@@ -53,7 +54,7 @@ const Header = (props: Props) => {
   }, [checkoutOrders])
 
 
-  // render
+  // Render
   return (
     <div className={classes.root}>
       <AppBar position="static" color="inherit">

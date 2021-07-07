@@ -1,26 +1,34 @@
 import React, { useState } from 'react'
+
+// Router
 import { Redirect, Route, Switch } from 'react-router-dom'
+
+// Material UI
 import { GridRowId } from '@material-ui/data-grid'
 
-//moje komponenty
+// Moje komponenty
 import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
 import OrdersPage from './views/OrdersPage'
 import CheckoutPage from './views/CheckoutPage'
 
-interface Props {
-    
-}
 
-const App = (props: Props) => {
+
+const App = () => {
+  // Constants
   const [checkoutOrdersToHeader, setcheckoutOrdersToHeader] = useState<GridRowId[]>([])
 
+
+  // Odchytenie a setnutie pole s ID selectnutych objednavok
   const handleCheckoutOrdersToHeader = (arr: GridRowId[]) => {
     setcheckoutOrdersToHeader(arr)
   }
 
+
+  // Render
   return (
     <div>
+
       <Header ArrCheckoutOrders={checkoutOrdersToHeader} />
 
       <main>
@@ -36,6 +44,7 @@ const App = (props: Props) => {
       </main>
 
       <Footer/>
+      
     </div>
   )
 }
