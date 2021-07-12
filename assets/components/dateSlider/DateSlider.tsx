@@ -9,6 +9,8 @@ import { Grid, makeStyles, Typography } from '@material-ui/core';
 // Props
 interface Props {
 	filterByDates: (beginDate: Date, endDate: Date) => void
+	datesAfterRerenderPage: string[]
+  //ifOrdersChange: boolean
 }
 
 
@@ -42,7 +44,25 @@ const DateSlider = (props: Props) => {
   const [begginingDate, setBegginingDate] = useState<Date | null>()
 	const [endingDate, setEndingDate] = useState<Date | null>()
 	const classes = useStyles();
-	const setDates = props.filterByDates
+  const setDates = props.filterByDates
+  // nedokoncene => Sluzi na to ked sa spravi rerender ordersPage tak
+  // datumy ostanu take ake boli najprv zadane (imidzovka)
+  // const datesAfterRerenderPage = props.datesAfterRerenderPage
+  // const ifOrdersChange = props.ifOrdersChange
+
+
+  // useEffect(() => {
+  //   if(datesAfterRerenderPage.length > 0 || ifOrdersChange == true){
+  //     const beginDate = new Date(datesAfterRerenderPage[0])
+  //     const endDate = new Date(datesAfterRerenderPage[1])
+  //     setBegginingDate(beginDate)
+  //     setEndingDate(endDate)
+  //     console.log('begin date:')
+  //     console.log(begginingDate)
+  //     console.log('end date:')
+  //     console.log(endDate)
+  //   }
+  // }, [ifOrdersChange])
 
 
 	// Odchytenie zaciatku datumu

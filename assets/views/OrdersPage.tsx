@@ -32,6 +32,7 @@ const OrdersPage = (props: Props) => {
   const [beginDate, setBeginDate] = useState<string>()
   const [endDate, setEndDate] = useState<string>()
   const [dates, setDates] = useState<string[]>([])
+  const [ifOrdersChange, setIfOrdersChange] = useState<boolean>()
   const checkoutOrders = props.ArrCheckoutOrders
   const handleDateOrders = props.handleDateOrders
   const dateOrdersBackToOrders = props.dateOrdersBackToOrders
@@ -91,6 +92,7 @@ const OrdersPage = (props: Props) => {
   useEffect(() => {
     if(dateOrdersBackToOrders.length > 0){
       setOrders(dateOrdersBackToOrders)
+      //setIfOrdersChange(true)
     }
   }, [dateOrdersBackToOrders] )
 
@@ -117,7 +119,7 @@ const OrdersPage = (props: Props) => {
   // Render
   return (
     <div>
-      <DateSlider filterByDates={handleDates} />
+      <DateSlider filterByDates={handleDates} datesAfterRerenderPage={dates} /*ifOrdersChange={ifOrdersChange}*/ />
       {/* Ak je nastaveny date tak sprav render a posli date */}
       {orders.length > 0 &&
         <Orders 
