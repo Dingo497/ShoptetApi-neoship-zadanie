@@ -8,6 +8,7 @@ import axios from 'axios'
 
 // Moje komponenty
 import Orders from '../components/table/Orders'
+import DateSlider from '../components/dateSlider/DateSlider'
 
 // Moje interfaces
 import { allOrders } from '../types'
@@ -26,15 +27,37 @@ const OrdersPage = (props: Props) => {
   const [checkoutOrdersId, setcheckoutOrdersId] = useState(
     localStorage.getItem('checkoutOrdersId') || ''
   )
+  const [beginDate, setBeginDate] = useState<string>()
+  const [endDate, setEndDate] = useState<string>()
+  const [dates, setDates] = useState<string[]>([])
   const checkoutOrders = props.ArrCheckoutOrders
 
 
-  // Zavola vsetky objednavky a zmenim si pole podla seba
+  // Odchytenie filtracnych datumov
+  const handleDates = (beginDate:Date, endDate:Date) => {
+    setBeginDate(beginDate.toISOString())
+    setEndDate(endDate.toISOString())
+  }
+
+
+  // Zistenie zmeny datumov
   useEffect(() => {
-    if(orders == undefined){
+    if(beginDate && endDate){
+      setDates([beginDate, endDate])
+    }
+  }, [beginDate, endDate])
+
+
+  // Zavolanie objednavok podla datumu
+  useEffect(() => {
+    if(dates.length > 0){
       axios.get(
-        'http://symfony/api/all-orders'
-      ).then(response=>{
+        'http://symfony/api/all-orders', {
+          headers: {
+            'Dates' : JSON.stringify(dates)
+          }
+        })
+        .then((response) => {
         const allOrders = response.data.data.orders
         // uprava pola podla poziadaviek DataGrid
         setOrders(allOrders.map((order: any, index: number) => {
@@ -56,7 +79,7 @@ const OrdersPage = (props: Props) => {
         }))
       })
     }
-  }, [])
+  }, [dates])
 
 
   // Odchitenie zaskrtnutych objednavok
@@ -75,7 +98,14 @@ const OrdersPage = (props: Props) => {
   // Render
   return (
     <div>
-      <Orders ArrOrders={orders} ArrCheckoutOrders={handleCheckoutOrders}/>
+      <DateSlider filterByDates={handleDates} />
+      {/* Ak je nastaveny date tak sprav render a posli date */}
+      {dates.length > 0 &&
+        <Orders 
+          ArrOrders={orders} 
+          ArrCheckoutOrders={handleCheckoutOrders}
+        />
+      }
     </div>
   )
 }

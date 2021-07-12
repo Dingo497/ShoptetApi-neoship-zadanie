@@ -8,26 +8,34 @@ namespace App\Model\ApiEndpoints;
 class GetOrders
 {
 
-  public function getOrders($accessToken)
+  public function getOrders($accessToken, $dates)
   {
-      
-    $curl = curl_init();
+    $dateCreatedFrom = date_create($dates[0]);
+    $dateCreatedTo = date_create($dates[1]);
 
-    curl_setopt($curl, CURLOPT_URL, "https://api.myshoptet.com/api/orders");
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($curl, CURLOPT_HEADER, FALSE);
+    $dateFormatedFrom = date_format($dateCreatedFrom, 'c');
+    $dateFormatedTo = date_format($dateCreatedTo, 'c');
 
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-      "Shoptet-Access-Token: $accessToken",
-      "Content-Type: application/vnd.shoptet.v1.0"
-    ));
+    $dateFrom = urlencode($dateFormatedFrom);
+    $dateTo = urlencode($dateFormatedTo);
+    
+      $curl = curl_init();
 
-    $response = curl_exec($curl);
-    curl_close($curl);
+      curl_setopt($curl, CURLOPT_URL, "https://api.myshoptet.com/api/orders?creationTimeFrom=".$dateFrom."&creationTimeTo=".$dateTo);
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+      curl_setopt($curl, CURLOPT_HEADER, FALSE);
 
-    $orders = json_decode($response, true);
+      curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+        "Shoptet-Access-Token: $accessToken",
+        "Content-Type: application/vnd.shoptet.v1.0"
+      ));
 
-    return $orders;
+      $response = curl_exec($curl);
+      curl_close($curl);
+
+      $orders = json_decode($response, true);
+
+      return $orders;
 
   }
 

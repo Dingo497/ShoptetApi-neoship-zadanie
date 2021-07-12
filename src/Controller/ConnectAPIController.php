@@ -20,7 +20,7 @@ class ConnectAPIController extends AbstractController
   private $oAuthServer = 'https://neoship.myshoptet.com/action/ApiOAuthServer/token';
   private $apiAccessTokenUrl = 'https://neoship.myshoptet.com/action/ApiOAuthServer/getAccessToken';
 
-  public function save($caption, $code, $struct) {
+  private function save($caption, $code, $struct) {
     $entry = sprintf("%s %s: %d\n%0s", date('c'), $caption, $code, print_r($struct, true));
     file_put_contents('log.txt', $entry, FILE_APPEND);
   }
@@ -58,13 +58,16 @@ class ConnectAPIController extends AbstractController
     // save('OAuth Access Token (permanent)', $statusCode, $oAuthResponse);
     // $oauthAccessToken = $oAuthResponse['access_token'];  // secret permanent token
 
+    // print_r("toto je response:");
 		// print_r($oAuthResponse);
+    // print_r("Token:");
+    // print_r($oauthAccessToken);
 
     // return $this->render('index/index.html.twig', [
     //     'controller_name' => 'ConnectAPIController',
     // 	]);
 
-    echo "tu sa nainstaluje doplnok + e-shop <br>";
+    echo "tu sa nainstaluje doplnok + e-shop <br>" ;
     return $this->getApiAccesToken();
       
 	}
@@ -89,7 +92,7 @@ class ConnectAPIController extends AbstractController
 		// print_r($accessTokenResponse);
 
     echo "tu bude ziskanie docasneho OAuth a jeho rekapitulacia <br>";
-    $this->getAllOrders();
+    // $this->getAllOrders();
     return $this->redirectToRoute('index', [], 301);
 
   }
@@ -98,15 +101,16 @@ class ConnectAPIController extends AbstractController
    * @Route("/api/all-orders", name="allOrders")
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
-  public function getAllOrders()
+  public function getAllOrders(Request $request)
   {
     /**
      * Get Orders z Model GetOrders.php
      */
-    $accessToken = "450738-a-644-twrsyh61qwxqyco6cksjbkad2x5m5c1i";
+    $dates = json_decode($request->headers->get('Dates'));
+    $accessToken = "450738-a-644-dvr2tc45ufrbrurhm96ta5lgkwa2nx2m";
 
     $getOrders = new GetOrders;
-    $allOrders = $getOrders->getOrders($accessToken);
+    $allOrders = $getOrders->getOrders($accessToken, $dates);
 
     $response = new Response();
     $response->headers->set('Content-Type', 'application/json');
@@ -127,7 +131,7 @@ class ConnectAPIController extends AbstractController
      * Get Orders detail z Model GetOrdersDetails.php
      */
     $code = json_decode($request->headers->get('Orders-Codes'));
-    $accessToken = "450738-a-644-twrsyh61qwxqyco6cksjbkad2x5m5c1i";
+    $accessToken = "450738-a-644-dvr2tc45ufrbrurhm96ta5lgkwa2nx2m";
 
     $getOrders = new getOrdersDetails;
     $ordersDetails = $getOrders->getOrdersDetails($accessToken, $code);
