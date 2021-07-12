@@ -10,8 +10,10 @@ import Checkout from '../components/table/Checkout'
 import { ordersDetail } from '../types'
 
 
+// Props
 interface Props {
-
+  dateOrders: any[]
+  handleDateOrdersBackToOrders: (arr: any[]) => void
 }
 
 
@@ -21,6 +23,8 @@ const CheckoutPage = (props: Props) => {
   const [allOrdersWithId, setallOrdersWithId] = useState([])
   const [checkoutOrdersid, setcheckoutOrdersid] = useState([])
   const [finnalyOrdersDetails, setfinnalyOrdersDetails] = useState([])
+  const dateOrders = props.dateOrders
+  const dateOrdersBackToOrders = props.handleDateOrdersBackToOrders
 
 
   // Ak existuje localStorage parsnem a setnem si ho do stateu
@@ -31,26 +35,16 @@ const CheckoutPage = (props: Props) => {
   }, [localStorage.getItem('checkoutOrdersId')])
 
 
-  // Getnem vsetky objednavky a setnem im svoje id ktore potrebujem
-  // na DataGrid tabulku
+  // Ak su setnute orders tak ich vykresli a posli znovu do ordersPage
   useEffect(() => {
-    axios.get(
-      'http://symfony/api/all-orders'
-    ).then(response=>{
-      const allOrders = response.data.data.orders
-      // Uprava pola podla poziadaviek DataGrid
-      setallOrdersWithId(allOrders.map((order: any, index: number) => {
-        order.id = index + 1
-        return order
-      }))
-    })
-    
-    }, [])
+    setallOrdersWithId(dateOrders) 
+    dateOrdersBackToOrders(dateOrders)
+  }, [dateOrders])
 
 
-  // Getnem si detaily objednavok na zaklade Id ktore som ziskal
-  // z localStorage potom vdaka Id ziskam code objednavok ktore
-  // mam getnut a vytvorim si svoje pole detailov
+  // Getnem si detaily objednavok na zaklade Id kt. mam z localStorage
+  // da sa este zjednodusit (pretoze som spravil refactoring kodu
+  // a pridal som novu funkcionalitu)
   useEffect(() => {
     const filtered = allOrdersWithId.filter(order => checkoutOrdersid.includes(order.id))
     const ordersCodes = filtered.map(order => order.code) 

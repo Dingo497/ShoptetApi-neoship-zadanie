@@ -17,11 +17,25 @@ import CheckoutPage from './views/CheckoutPage'
 const App = () => {
   // Constants
   const [checkoutOrdersToHeader, setcheckoutOrdersToHeader] = useState<GridRowId[]>([])
+  const [dateOrders, setdateOrders] = useState([])
+  const [dateOrdersBackToOrders, setdateOrdersBackToOrders] = useState([])
 
 
   // Odchytenie a setnutie pole s ID selectnutych objednavok
   const handleCheckoutOrdersToHeader = (arr: GridRowId[]) => {
     setcheckoutOrdersToHeader(arr)
+  }
+
+
+  // Odchytenie objednavok z OrdersPage na zaklade datumov
+  const handleDateOrders = (arr:any[]) => {
+    setdateOrders(arr)
+  }
+
+
+  // Odchytenie objednavok z CheckoutPage na zaklade datumov (poslanie naspat)
+  const handleDateOrdersBackToOrders = (arr:any[]) => {
+    setdateOrdersBackToOrders(arr)
   }
 
 
@@ -33,10 +47,19 @@ const App = () => {
 
       <main>
         <Switch>ArrCheckoutOrders
-          <Route path="/" exact render={() => <OrdersPage ArrCheckoutOrders={handleCheckoutOrdersToHeader} /> } />
+          <Route path="/" exact render={() => 
+            <OrdersPage 
+              ArrCheckoutOrders={handleCheckoutOrdersToHeader} 
+              handleDateOrders={handleDateOrders}
+              dateOrdersBackToOrders={dateOrdersBackToOrders}
+            /> } />
           {/* Ak je nieco selected pusti na stranku inak nie */}
           {checkoutOrdersToHeader.length > 0 ? (
-            <Route path="/checkout" exact component={CheckoutPage} />
+            <Route path="/checkout" exact render={() => 
+              <CheckoutPage 
+                dateOrders={dateOrders}
+                handleDateOrdersBackToOrders={handleDateOrdersBackToOrders}
+              /> } />
           ) : (
             <Redirect to="/" />
           )}

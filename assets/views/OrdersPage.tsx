@@ -17,13 +17,15 @@ import { allOrders } from '../types'
 // Props
 interface Props {
   ArrCheckoutOrders: (arr: GridRowId[]) => void
+  handleDateOrders: (dateOrders: any[]) => void
+  dateOrdersBackToOrders: any[]
 }
 
 
 
 const OrdersPage = (props: Props) => {
   // Constants
-  const [orders, setOrders] = useState<allOrders[]>()
+  const [orders, setOrders] = useState<allOrders[]>([])
   const [checkoutOrdersId, setcheckoutOrdersId] = useState(
     localStorage.getItem('checkoutOrdersId') || ''
   )
@@ -31,6 +33,8 @@ const OrdersPage = (props: Props) => {
   const [endDate, setEndDate] = useState<string>()
   const [dates, setDates] = useState<string[]>([])
   const checkoutOrders = props.ArrCheckoutOrders
+  const handleDateOrders = props.handleDateOrders
+  const dateOrdersBackToOrders = props.dateOrdersBackToOrders
 
 
   // Odchytenie filtracnych datumov
@@ -40,7 +44,7 @@ const OrdersPage = (props: Props) => {
   }
 
 
-  // Zistenie zmeny datumov
+  // Zistenie zmeny jednotlivych datumov
   useEffect(() => {
     if(beginDate && endDate){
       setDates([beginDate, endDate])
@@ -48,7 +52,7 @@ const OrdersPage = (props: Props) => {
   }, [beginDate, endDate])
 
 
-  // Zavolanie objednavok podla datumu
+  // Zavolanie objednavok podla datumu po prvy krat
   useEffect(() => {
     if(dates.length > 0){
       axios.get(
@@ -82,6 +86,21 @@ const OrdersPage = (props: Props) => {
   }, [dates])
 
 
+  // Sledovanie ci mam kvazi zapametane (poslane naspat) objednavky
+  // z predosleho hladania
+  useEffect(() => {
+    if(dateOrdersBackToOrders.length > 0){
+      setOrders(dateOrdersBackToOrders)
+    }
+  }, [dateOrdersBackToOrders] )
+
+
+  // Sledovanie zmeny objednavok a poslanie ich do app
+  useEffect(() => {
+    handleDateOrders(orders)
+  }, [orders])
+
+
   // Odchitenie zaskrtnutych objednavok
   const handleCheckoutOrders = (arr:GridRowId[]) => {
     setcheckoutOrdersId(JSON.stringify(arr))
@@ -100,7 +119,7 @@ const OrdersPage = (props: Props) => {
     <div>
       <DateSlider filterByDates={handleDates} />
       {/* Ak je nastaveny date tak sprav render a posli date */}
-      {dates.length > 0 &&
+      {orders.length > 0 &&
         <Orders 
           ArrOrders={orders} 
           ArrCheckoutOrders={handleCheckoutOrders}

@@ -25,6 +25,8 @@ class ConnectAPIController extends AbstractController
     file_put_contents('log.txt', $entry, FILE_APPEND);
   }
 
+
+  
   /**
    * @Route("/shoptet-installation", name="connectApi")
    */
@@ -73,6 +75,7 @@ class ConnectAPIController extends AbstractController
 	}
 
 
+
   public function getApiAccesToken(): RedirectResponse
   {
     /**
@@ -97,6 +100,8 @@ class ConnectAPIController extends AbstractController
 
   }
 
+
+
   /**
    * @Route("/api/all-orders", name="allOrders")
    * @return \Symfony\Component\HttpFoundation\JsonResponse
@@ -120,6 +125,8 @@ class ConnectAPIController extends AbstractController
     return $response;
 
   }
+
+
 
   /**
    * @Route("/api/orders-detail", name="ordersDetail")

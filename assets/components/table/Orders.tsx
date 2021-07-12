@@ -128,21 +128,7 @@ const Orders = (props: Props) => {
     }
   }, [])
 
-
-  // sluzi na sledovanie sirky obrazovky a ked dosiahne 1000px...
-  // asi nepouzijem
-  // const checkWidth = (param: GridResizeParams) => {
-  //   if(param.containerSize.width <= 1000){
-  //     columns.map((column) => {
-  //       delete(column.flex)
-  //       column.width = 120
-  //       return column
-  //     })
-  //     setcolumns(columns)
-  //     // console.log(columns)
-  //   }
-  // }
-
+  
 
   // Render
   return (
