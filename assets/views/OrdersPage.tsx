@@ -19,6 +19,8 @@ interface Props {
   ArrCheckoutOrders: (arr: GridRowId[]) => void
   handleDateOrders: (dateOrders: any[]) => void
   dateOrdersBackToOrders: any[]
+  selectedDates: (arr: string[]) => void
+  getBackDates: string[]
 }
 
 
@@ -32,10 +34,11 @@ const OrdersPage = (props: Props) => {
   const [beginDate, setBeginDate] = useState<string>()
   const [endDate, setEndDate] = useState<string>()
   const [dates, setDates] = useState<string[]>([])
-  const [ifOrdersChange, setIfOrdersChange] = useState<boolean>()
   const checkoutOrders = props.ArrCheckoutOrders
   const handleDateOrders = props.handleDateOrders
   const dateOrdersBackToOrders = props.dateOrdersBackToOrders
+  const selectedDates = props.selectedDates
+  const getBackDates = props.getBackDates
 
 
   // Odchytenie filtracnych datumov
@@ -51,6 +54,12 @@ const OrdersPage = (props: Props) => {
       setDates([beginDate, endDate])
     }
   }, [beginDate, endDate])
+
+
+  // Zistenie zmeny dates a ak sa zmenil posli datumy app.tsx
+  useEffect(() => {
+    selectedDates(dates)
+  }, [dates])
 
 
   // Zavolanie objednavok podla datumu po prvy krat
@@ -92,7 +101,6 @@ const OrdersPage = (props: Props) => {
   useEffect(() => {
     if(dateOrdersBackToOrders.length > 0){
       setOrders(dateOrdersBackToOrders)
-      //setIfOrdersChange(true)
     }
   }, [dateOrdersBackToOrders] )
 
@@ -119,7 +127,7 @@ const OrdersPage = (props: Props) => {
   // Render
   return (
     <div>
-      <DateSlider filterByDates={handleDates} datesAfterRerenderPage={dates} /*ifOrdersChange={ifOrdersChange}*/ />
+      <DateSlider filterByDates={handleDates} getBackDates={getBackDates} />
       {/* Ak je nastaveny date tak sprav render a posli date */}
       {orders.length > 0 &&
         <Orders 

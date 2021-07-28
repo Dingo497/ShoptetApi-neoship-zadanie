@@ -19,6 +19,8 @@ const App = () => {
   const [checkoutOrdersToHeader, setcheckoutOrdersToHeader] = useState<GridRowId[]>([])
   const [dateOrders, setdateOrders] = useState([])
   const [dateOrdersBackToOrders, setdateOrdersBackToOrders] = useState([])
+  const [dates, setDates] = useState<string[]>()
+  const [getBackDates, setGetBackDates] = useState<string[]>()
 
 
   // Odchytenie a setnutie pole s ID selectnutych objednavok
@@ -39,6 +41,19 @@ const App = () => {
   }
 
 
+  // Odchytenie datumu z DateSlider
+  const handleSelectedDates = (arr:string[]) => {
+    setDates(arr)
+  }
+
+
+  // Odchytenie selected datumov nazad do orders page
+  const handleGetBackDates = (arr:string[]) => {
+    setGetBackDates(arr)
+  }
+
+
+
   // Render
   return (
     <div>
@@ -52,11 +67,15 @@ const App = () => {
               ArrCheckoutOrders={handleCheckoutOrdersToHeader} 
               handleDateOrders={handleDateOrders}
               dateOrdersBackToOrders={dateOrdersBackToOrders}
+              selectedDates={handleSelectedDates}
+              getBackDates={getBackDates}
             /> } />
           {/* Ak je nieco selected pusti na stranku inak nie */}
           {checkoutOrdersToHeader.length > 0 ? (
             <Route path="/checkout" exact render={() => 
               <CheckoutPage 
+                dates={dates}
+                getBackDates={handleGetBackDates}
                 dateOrders={dateOrders}
                 handleDateOrdersBackToOrders={handleDateOrdersBackToOrders}
               /> } />

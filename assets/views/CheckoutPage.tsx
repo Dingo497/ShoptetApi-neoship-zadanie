@@ -14,6 +14,8 @@ import { ordersDetail } from '../types'
 interface Props {
   dateOrders: any[]
   handleDateOrdersBackToOrders: (arr: any[]) => void
+  dates: string[]
+  getBackDates: (arr: string[]) => void
 }
 
 
@@ -25,6 +27,8 @@ const CheckoutPage = (props: Props) => {
   const [finnalyOrdersDetails, setfinnalyOrdersDetails] = useState([])
   const dateOrders = props.dateOrders
   const dateOrdersBackToOrders = props.handleDateOrdersBackToOrders
+  const dates = props.dates
+  const getBackDates = props.getBackDates
 
 
   // Ak existuje localStorage parsnem a setnem si ho do stateu
@@ -39,6 +43,7 @@ const CheckoutPage = (props: Props) => {
   useEffect(() => {
     setallOrdersWithId(dateOrders) 
     dateOrdersBackToOrders(dateOrders)
+    getBackDates(dates)
   }, [dateOrders])
 
 

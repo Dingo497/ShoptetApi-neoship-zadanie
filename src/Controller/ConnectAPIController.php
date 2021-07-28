@@ -112,7 +112,7 @@ class ConnectAPIController extends AbstractController
      * Get Orders z Model GetOrders.php
      */
     $dates = json_decode($request->headers->get('Dates'));
-    $accessToken = "450738-a-644-dvr2tc45ufrbrurhm96ta5lgkwa2nx2m";
+    $accessToken = "450738-a-644-ck21axsgs2boecmrled89egyyaqoxuat";
 
     $getOrders = new GetOrders;
     $allOrders = $getOrders->getOrders($accessToken, $dates);
@@ -138,7 +138,7 @@ class ConnectAPIController extends AbstractController
      * Get Orders detail z Model GetOrdersDetails.php
      */
     $code = json_decode($request->headers->get('Orders-Codes'));
-    $accessToken = "450738-a-644-dvr2tc45ufrbrurhm96ta5lgkwa2nx2m";
+    $accessToken = "450738-a-644-ck21axsgs2boecmrled89egyyaqoxuat";
 
     $getOrders = new getOrdersDetails;
     $ordersDetails = $getOrders->getOrdersDetails($accessToken, $code);

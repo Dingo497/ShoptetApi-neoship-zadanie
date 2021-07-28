@@ -3,14 +3,13 @@ import React, { Component, useEffect, useState } from 'react';
 // Date a Material UI
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider,KeyboardDatePicker } from '@material-ui/pickers';
-import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
 
 
 // Props
 interface Props {
 	filterByDates: (beginDate: Date, endDate: Date) => void
-	datesAfterRerenderPage: string[]
-  //ifOrdersChange: boolean
+	getBackDates: string[]
 }
 
 
@@ -20,49 +19,62 @@ const useStyles = makeStyles((theme) => ({
   h3: {
     ...theme.typography.button,
     backgroundColor: "#e8dccc",
-    padding: theme.spacing(1),
-		maxWidth: "60%",
-		marginTop: 5,
-		marginBottom: 5,
-		fontSize: 15,
+    padding: 8,
+    paddingTop: 10,
+		maxWidth: "100%",
+		fontSize: 18,
 		textAlign: "center",
 		borderRadius: "5px",
+    margin: '5%',
   },
 	grid: {
 		marginTop: 20,
-		marginBottom: 20
+		marginBottom: 20,
+    textAlign: 'center',
 	}, 
 	datePicker: {
 		width: "75%"
-	}
+	},
+  btn: {
+    ...theme.typography.button,
+    backgroundColor: "#e8dccc",
+    padding: 22,
+    paddingBottom: 10,
+    paddingTop: 12,
+		maxWidth: "100%",
+		fontSize: 20,
+		textAlign: "center",
+		borderRadius: "5px",
+    margin: '1%',
+    marginBottom: '3%'
+  },
 }));
 
 
 
 const DateSlider = (props: Props) => {
 	// Constants
-  const [begginingDate, setBegginingDate] = useState<Date | null>()
-	const [endingDate, setEndingDate] = useState<Date | null>()
+  const date = new Date()
+  date.setMonth(date.getMonth() - 3);
+  const [begginingDate, setBegginingDate] = useState<Date>(date)
+	const [endingDate, setEndingDate] = useState<Date | null>(new Date)
 	const classes = useStyles();
   const setDates = props.filterByDates
+  const getBackDates = props.getBackDates
   // nedokoncene => Sluzi na to ked sa spravi rerender ordersPage tak
   // datumy ostanu take ake boli najprv zadane (imidzovka)
   // const datesAfterRerenderPage = props.datesAfterRerenderPage
-  // const ifOrdersChange = props.ifOrdersChange
 
 
-  // useEffect(() => {
-  //   if(datesAfterRerenderPage.length > 0 || ifOrdersChange == true){
-  //     const beginDate = new Date(datesAfterRerenderPage[0])
-  //     const endDate = new Date(datesAfterRerenderPage[1])
-  //     setBegginingDate(beginDate)
-  //     setEndingDate(endDate)
-  //     console.log('begin date:')
-  //     console.log(begginingDate)
-  //     console.log('end date:')
-  //     console.log(endDate)
-  //   }
-  // }, [ifOrdersChange])
+  //Na zapametanie datumu po vrateni sa na orders page
+  useEffect(() => {
+    if(getBackDates !== undefined){
+      const beginDate = new Date(getBackDates[0])
+      const endDate = new Date(getBackDates[1])
+      setBegginingDate(beginDate)
+      setEndingDate(endDate)
+    }
+  }, [getBackDates])
 
 
 	// Odchytenie zaciatku datumu
@@ -77,16 +89,17 @@ const DateSlider = (props: Props) => {
 	}
 
 
-	// Poslanie datumu do OrdersPage
-	useEffect(() => {
-		if(begginingDate && endingDate) {
+  // Poslanie datumu po kliknuti na tlacitko
+  const onSubmitDate = () => {
+    if(begginingDate && endingDate) {
 			setDates(begginingDate, endingDate)
 		}
-	}, [begginingDate, endingDate])
+  }
 
 
 	// Render
   return (
+    <div>
 		<Grid 
 			container 
 			justify = "center" 
@@ -94,7 +107,7 @@ const DateSlider = (props: Props) => {
 		>
 			<Grid item className={classes.grid} >
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
-					<Typography variant="h3" align="center" className={classes.h3}>
+					<Typography variant="h3" className={classes.h3}>
 						Pociatocny datum
 					</Typography>
 					<KeyboardDatePicker
@@ -112,7 +125,7 @@ const DateSlider = (props: Props) => {
 			</Grid>
 			<Grid item className={classes.grid} >
 				<MuiPickersUtilsProvider utils={DateFnsUtils}>
-					<Typography variant="h3" align="center" className={classes.h3}>
+					<Typography variant="h3" className={classes.h3}>
 						Koncovy datum
 					</Typography>
 					<KeyboardDatePicker
@@ -129,6 +142,18 @@ const DateSlider = (props: Props) => {
 				</MuiPickersUtilsProvider>
 			</Grid>
 		</Grid>
+    <Grid 
+      container 
+      justify = "center" 
+      alignItems = "center"
+    >
+      <Button
+        className={classes.btn}
+        onClick={onSubmitDate}
+        >Potvrdiť
+      </Button>
+    </Grid>
+    </div>
   );
 }
 
