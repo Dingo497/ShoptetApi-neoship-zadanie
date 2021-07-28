@@ -16,7 +16,8 @@ import { allOrders } from '../types'
 
 // Props
 interface Props {
-  ArrCheckoutOrders: (arr: GridRowId[]) => void
+  ArrcheckoutOrdersID: (arr: GridRowId[]) => void
+  checkoutOrdersIDBackToOrders: GridRowId[]
   handleDateOrders: (dateOrders: any[]) => void
   dateOrdersBackToOrders: any[]
   selectedDates: (arr: string[]) => void
@@ -28,13 +29,11 @@ interface Props {
 const OrdersPage = (props: Props) => {
   // Constants
   const [orders, setOrders] = useState<allOrders[]>([])
-  const [checkoutOrdersId, setcheckoutOrdersId] = useState(
-    localStorage.getItem('checkoutOrdersId') || ''
-  )
   const [beginDate, setBeginDate] = useState<string>()
   const [endDate, setEndDate] = useState<string>()
   const [dates, setDates] = useState<string[]>([])
-  const checkoutOrders = props.ArrCheckoutOrders
+  const ArrcheckoutOrdersID = props.ArrcheckoutOrdersID
+  const checkoutOrdersIDBackToOrders = props.checkoutOrdersIDBackToOrders
   const handleDateOrders = props.handleDateOrders
   const dateOrdersBackToOrders = props.dateOrdersBackToOrders
   const selectedDates = props.selectedDates
@@ -112,16 +111,10 @@ const OrdersPage = (props: Props) => {
 
 
   // Odchitenie zaskrtnutych objednavok
-  const handleCheckoutOrders = (arr:GridRowId[]) => {
-    setcheckoutOrdersId(JSON.stringify(arr))
-    checkoutOrders(arr)
+  const handleArrcheckoutOrdersID = (arr:GridRowId[]) => {
+    ArrcheckoutOrdersID(arr)
   }
 
-
-  // Nastavenie localStorage
-  useEffect(() => {
-    localStorage.setItem('checkoutOrdersId', checkoutOrdersId)
-  }, [handleCheckoutOrders])
 
 
   // Render
@@ -132,7 +125,8 @@ const OrdersPage = (props: Props) => {
       {orders.length > 0 &&
         <Orders 
           ArrOrders={orders} 
-          ArrCheckoutOrders={handleCheckoutOrders}
+          ArrcheckoutOrdersID={handleArrcheckoutOrdersID}
+          checkoutOrdersIDBackToOrders={checkoutOrdersIDBackToOrders}
         />
       }
     </div>

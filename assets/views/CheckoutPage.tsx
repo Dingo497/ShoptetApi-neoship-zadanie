@@ -9,6 +9,9 @@ import Checkout from '../components/table/Checkout'
 // Moje interfaces
 import { ordersDetail } from '../types'
 
+// Material UI
+import { GridRowId } from '@material-ui/data-grid'
+
 
 // Props
 interface Props {
@@ -16,6 +19,8 @@ interface Props {
   handleDateOrdersBackToOrders: (arr: any[]) => void
   dates: string[]
   getBackDates: (arr: string[]) => void
+  checkoutOrdersID: GridRowId[]
+  checkoutOrdersIDBackToOrders: (arr: GridRowId[]) => void
 }
 
 
@@ -23,20 +28,22 @@ interface Props {
 const CheckoutPage = (props: Props) => {
   // Constants
   const [allOrdersWithId, setallOrdersWithId] = useState([])
-  const [checkoutOrdersid, setcheckoutOrdersid] = useState([])
+  const [checkoutOrdersid, setcheckoutOrdersid] = useState<GridRowId[]>()
   const [finnalyOrdersDetails, setfinnalyOrdersDetails] = useState([])
   const dateOrders = props.dateOrders
   const dateOrdersBackToOrders = props.handleDateOrdersBackToOrders
   const dates = props.dates
   const getBackDates = props.getBackDates
-
+  const checkoutOrdersID = props.checkoutOrdersID
+  const checkoutOrdersIDBackToOrders = props.checkoutOrdersIDBackToOrders
 
   // Ak existuje localStorage parsnem a setnem si ho do stateu
   useEffect(() => {
-    if(localStorage.getItem('checkoutOrdersId')){
-      setcheckoutOrdersid(JSON.parse(localStorage.getItem('checkoutOrdersId')))
+    if(checkoutOrdersID.length > 0){
+      setcheckoutOrdersid(checkoutOrdersID)
+      checkoutOrdersIDBackToOrders(checkoutOrdersID)
     }
-  }, [localStorage.getItem('checkoutOrdersId')])
+  }, [checkoutOrdersID])
 
 
   // Ak su setnute orders tak ich vykresli a posli znovu do ordersPage

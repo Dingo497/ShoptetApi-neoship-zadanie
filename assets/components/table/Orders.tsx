@@ -12,7 +12,8 @@ import { allOrders } from '../../types'
 // Props
 interface Props {
   ArrOrders:allOrders[],
-  ArrCheckoutOrders: (arr: GridRowId[]) => void
+  ArrcheckoutOrdersID: (arr: GridRowId[]) => void
+  checkoutOrdersIDBackToOrders: GridRowId[]
 }
 
 
@@ -50,8 +51,9 @@ const Orders = (props: Props) => {
     )
   }
   const [ifIsSelected, setIfIsSelected] = useState(true)
-  const [rememberSelectedRows, setRememberSelectedRows] = useState([])
-  const checkoutOrders = props.ArrCheckoutOrders
+  const [rememberSelectedRows, setRememberSelectedRows] = useState<GridRowId[]>()
+  const ArrcheckoutOrdersID = props.ArrcheckoutOrdersID
+  const checkoutOrdersIDBackToOrders = props.checkoutOrdersIDBackToOrders
   const classes = useStyles();
 
 
@@ -110,7 +112,7 @@ const Orders = (props: Props) => {
 
   // Odchytenie objednavok do sekcie kontroly
   const handleSelectedRows = (data:GridSelectionModelChangeParams) => {
-    checkoutOrders(data.selectionModel)
+    ArrcheckoutOrdersID(data.selectionModel)
     if( data.selectionModel.length === 0 ){
       setIfIsSelected(true)
     }else{
@@ -121,10 +123,12 @@ const Orders = (props: Props) => {
 
   // Sluzi na ulozenie selected objednavky
   useEffect(() => {
-    if(localStorage.getItem('checkoutOrdersId').length >= 3){
-      setRememberSelectedRows(JSON.parse(localStorage.getItem('checkoutOrdersId')))
-    }else{
-      setRememberSelectedRows([])
+    if(checkoutOrdersIDBackToOrders !== undefined){
+      if(checkoutOrdersIDBackToOrders.length > 0){
+        setRememberSelectedRows(checkoutOrdersIDBackToOrders)
+      }else{
+        setRememberSelectedRows([])
+      }
     }
   }, [])
 

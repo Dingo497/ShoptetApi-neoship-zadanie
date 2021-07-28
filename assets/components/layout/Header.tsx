@@ -10,7 +10,7 @@ import { GridRowId } from '@material-ui/data-grid';
 
 // Props
 interface Props {
-  ArrCheckoutOrders: GridRowId[]
+  ArrcheckoutOrdersID: GridRowId[]
 }
 
 
@@ -40,7 +40,7 @@ const Header = (props: Props) => {
   // Constants
   const classes = useStyles();
   const [ifIsSelected, setifIsSelected] = useState<boolean>(false)
-  const checkoutOrders = props.ArrCheckoutOrders
+  const checkoutOrders = props.ArrcheckoutOrdersID
 
 
 

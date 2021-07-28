@@ -16,7 +16,8 @@ import CheckoutPage from './views/CheckoutPage'
 
 const App = () => {
   // Constants
-  const [checkoutOrdersToHeader, setcheckoutOrdersToHeader] = useState<GridRowId[]>([])
+  const [checkoutOrdersID, setcheckoutOrdersID] = useState<GridRowId[]>([])
+  const [checkoutOrdersIDBackToOrders, setCheckoutOrdersIDBackToOrders] = useState<GridRowId[]>()
   const [dateOrders, setdateOrders] = useState([])
   const [dateOrdersBackToOrders, setdateOrdersBackToOrders] = useState([])
   const [dates, setDates] = useState<string[]>()
@@ -24,8 +25,14 @@ const App = () => {
 
 
   // Odchytenie a setnutie pole s ID selectnutych objednavok
-  const handleCheckoutOrdersToHeader = (arr: GridRowId[]) => {
-    setcheckoutOrdersToHeader(arr)
+  const handlecheckoutOrdersID = (arr: GridRowId[]) => {
+    setcheckoutOrdersID(arr)
+  }
+
+
+  // Odchytenie checkoutOrdersID ktore ide nazad do orders
+  const handleCheckoutOrdersIDBackToOrders = (arr:GridRowId[]) => {
+    setCheckoutOrdersIDBackToOrders(arr)
   }
 
 
@@ -58,26 +65,29 @@ const App = () => {
   return (
     <div>
 
-      <Header ArrCheckoutOrders={checkoutOrdersToHeader} />
+      <Header ArrcheckoutOrdersID={checkoutOrdersID} />
 
       <main>
-        <Switch>ArrCheckoutOrders
+        <Switch>ArrcheckoutOrdersID
           <Route path="/" exact render={() => 
             <OrdersPage 
-              ArrCheckoutOrders={handleCheckoutOrdersToHeader} 
+              ArrcheckoutOrdersID={handlecheckoutOrdersID} 
               handleDateOrders={handleDateOrders}
               dateOrdersBackToOrders={dateOrdersBackToOrders}
               selectedDates={handleSelectedDates}
               getBackDates={getBackDates}
+              checkoutOrdersIDBackToOrders={checkoutOrdersIDBackToOrders}
             /> } />
           {/* Ak je nieco selected pusti na stranku inak nie */}
-          {checkoutOrdersToHeader.length > 0 ? (
+          {checkoutOrdersID.length > 0 ? (
             <Route path="/checkout" exact render={() => 
               <CheckoutPage 
+                checkoutOrdersID={checkoutOrdersID}
                 dates={dates}
                 getBackDates={handleGetBackDates}
                 dateOrders={dateOrders}
                 handleDateOrdersBackToOrders={handleDateOrdersBackToOrders}
+                checkoutOrdersIDBackToOrders={handleCheckoutOrdersIDBackToOrders}
               /> } />
           ) : (
             <Redirect to="/" />

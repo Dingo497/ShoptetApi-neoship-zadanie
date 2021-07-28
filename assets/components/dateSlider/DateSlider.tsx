@@ -14,7 +14,6 @@ interface Props {
 
 
 // Styles
-// h3 + datumy niesu najlepsie vycentrovane do stredu
 const useStyles = makeStyles((theme) => ({
   h3: {
     ...theme.typography.button,
@@ -61,9 +60,6 @@ const DateSlider = (props: Props) => {
 	const classes = useStyles();
   const setDates = props.filterByDates
   const getBackDates = props.getBackDates
-  // nedokoncene => Sluzi na to ked sa spravi rerender ordersPage tak
-  // datumy ostanu take ake boli najprv zadane (imidzovka)
-  // const datesAfterRerenderPage = props.datesAfterRerenderPage
 
 
   //Na zapametanie datumu po vrateni sa na orders page
