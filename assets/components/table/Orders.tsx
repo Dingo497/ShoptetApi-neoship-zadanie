@@ -123,12 +123,16 @@ const Orders = (props: Props) => {
 
   // Sluzi na ulozenie selected objednavky
   useEffect(() => {
-    if(checkoutOrdersIDBackToOrders !== undefined){
-      if(checkoutOrdersIDBackToOrders.length > 0){
-        setRememberSelectedRows(checkoutOrdersIDBackToOrders)
-      }else{
-        setRememberSelectedRows([])
+    if(checkoutOrdersIDBackToOrders !== null){
+      if(checkoutOrdersIDBackToOrders !== undefined){
+        if(checkoutOrdersIDBackToOrders.length > 0){
+          setRememberSelectedRows(checkoutOrdersIDBackToOrders)
+        }else{
+          setRememberSelectedRows([])
+        }
       }
+    }else{
+      setRememberSelectedRows([])
     }
   }, [])
 

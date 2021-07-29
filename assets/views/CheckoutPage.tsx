@@ -54,6 +54,13 @@ const CheckoutPage = (props: Props) => {
   }, [dateOrders])
 
 
+  // Odchytenie ci som vymazal checkoutOrdersID v checkout.tsx
+  // po stlaceni import
+  const handleDeleteCheckoutOrdersID = (arr:null) => {
+    checkoutOrdersIDBackToOrders(arr)
+  }
+
+
   // Getnem si detaily objednavok na zaklade Id kt. mam z localStorage
   // da sa este zjednodusit (pretoze som spravil refactoring kodu
   // a pridal som novu funkcionalitu)
@@ -103,7 +110,7 @@ const CheckoutPage = (props: Props) => {
   // Render
   return (
     <div>
-        <Checkout checkoutOrders={finnalyOrdersDetails} />
+        <Checkout checkoutOrders={finnalyOrdersDetails} deleteCheckoutOrdersID={handleDeleteCheckoutOrdersID} />
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
 // Material UI
-import { DataGrid, GridColDef } from '@material-ui/data-grid'
+import { DataGrid, GridColDef, GridRowId } from '@material-ui/data-grid'
 import { Button, createStyles, makeStyles, Theme } from '@material-ui/core'
 
 // Moje interfaces
@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom'
 // Props
 interface Props {
     checkoutOrders: ordersDetail[]
+    deleteCheckoutOrdersID: (arr: null) => void
 }
 
 
@@ -35,6 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const Checkout = (props: Props) => {
   // Constants
   const stateCheckoutOrders = props.checkoutOrders
+  const deleteCheckoutOrdersID = props.deleteCheckoutOrdersID
   if(stateCheckoutOrders.length === 0){
     // Loading
     const loading = {
@@ -86,7 +88,7 @@ const Checkout = (props: Props) => {
     console.log('HOTOVY RESULT:')
     console.log(checkoutOrders)
     console.log('----------------------')
-    localStorage.removeItem('checkoutOrdersId')
+    deleteCheckoutOrdersID(null)
     setCheckoutOrders(null)
   }
 

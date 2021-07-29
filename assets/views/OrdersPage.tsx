@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 // Material UI
 import { GridRowId } from '@material-ui/data-grid'
+import { createStyles, makeStyles } from '@material-ui/core'
 
 // Axios
 import axios from 'axios'
@@ -25,6 +26,18 @@ interface Props {
 }
 
 
+// Styles
+const useStyles = makeStyles(() =>
+  createStyles({
+    loading: {
+      display: 'block',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      marginTop: '5%'
+    }
+  }))
+
+  
 
 const OrdersPage = (props: Props) => {
   // Constants
@@ -38,12 +51,15 @@ const OrdersPage = (props: Props) => {
   const dateOrdersBackToOrders = props.dateOrdersBackToOrders
   const selectedDates = props.selectedDates
   const getBackDates = props.getBackDates
+  const [loading, setLoading] = useState<boolean>(false)
+  const classes = useStyles();
 
 
   // Odchytenie filtracnych datumov
   const handleDates = (beginDate:Date, endDate:Date) => {
     setBeginDate(beginDate.toISOString())
     setEndDate(endDate.toISOString())
+    setLoading(true)
   }
 
 
@@ -116,12 +132,24 @@ const OrdersPage = (props: Props) => {
   }
 
 
+  // Sledovanie ak mam nacitany orders tak zastav loading
+  useEffect(() => {
+    if(orders.length > 0){
+      setLoading(false)
+    }
+  }, [orders])
+
+
 
   // Render
   return (
     <div>
       <DateSlider filterByDates={handleDates} getBackDates={getBackDates} />
       {/* Ak je nastaveny date tak sprav render a posli date */}
+      {loading === true && 
+        <img src={require('../img/Spin-1s-120px.gif')} 
+        alt="Loading" className={classes.loading}/>
+      }
       {orders.length > 0 &&
         <Orders 
           ArrOrders={orders} 
@@ -134,3 +162,12 @@ const OrdersPage = (props: Props) => {
 }
 
 export default OrdersPage
+
+
+/**
+ * TODO
+ * - Treba opravit bug s datumom ktory po prvom rerender na ordersPage
+ * funguje a hodi tam povodny zadany datum, ale po druhuom rerender
+ * mi tam napise zly format datumu treba opravit
+ * - Treba potom otestovat appku a upravit pridat komentare
+ */
