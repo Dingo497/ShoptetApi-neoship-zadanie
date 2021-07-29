@@ -57,8 +57,9 @@ const DateSlider = (props: Props) => {
   date.setMonth(date.getMonth() - 3);
   const [begginingDate, setBegginingDate] = useState<Date>(date)
 	const [endingDate, setEndingDate] = useState<Date | null>(new Date)
+	const [dates, setDates] = useState<Date[]>(null)
 	const classes = useStyles();
-  const setDates = props.filterByDates
+  const filterByDates = props.filterByDates
   const getBackDates = props.getBackDates
 
 
@@ -69,6 +70,7 @@ const DateSlider = (props: Props) => {
       const endDate = new Date(getBackDates[1])
       setBegginingDate(beginDate)
       setEndingDate(endDate)
+			filterByDates(beginDate, endDate)
     }
   }, [getBackDates])
 
@@ -88,9 +90,10 @@ const DateSlider = (props: Props) => {
   // Poslanie datumu po kliknuti na tlacitko
   const onSubmitDate = () => {
     if(begginingDate && endingDate) {
-			setDates(begginingDate, endingDate)
+			filterByDates(begginingDate, endingDate)
 		}
   }
+
 
 
 	// Render

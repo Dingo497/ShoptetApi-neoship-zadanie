@@ -37,8 +37,10 @@ const Checkout = (props: Props) => {
   // Constants
   const stateCheckoutOrders = props.checkoutOrders
   const deleteCheckoutOrdersID = props.deleteCheckoutOrdersID
+
+
+  // Loading
   if(stateCheckoutOrders.length === 0){
-    // Loading
     const loading = {
       display: 'block',
       marginLeft: 'auto',
@@ -50,6 +52,9 @@ const Checkout = (props: Props) => {
             alt="Loading" style={loading} />
     )
   }
+
+
+  // Constants
   const [checkoutOrders, setCheckoutOrders] = useState(stateCheckoutOrders)
   const classes = useStyles();
 
@@ -162,6 +167,7 @@ const Checkout = (props: Props) => {
     },
   ]
 
+  
   
   // Render
   return (

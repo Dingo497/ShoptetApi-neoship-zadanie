@@ -11,6 +11,7 @@ import { GridRowId } from '@material-ui/data-grid';
 // Props
 interface Props {
   ArrcheckoutOrdersID: GridRowId[]
+  checkoutOrdersIDAfterImport: GridRowId[]
 }
 
 
@@ -40,18 +41,31 @@ const Header = (props: Props) => {
   // Constants
   const classes = useStyles();
   const [ifIsSelected, setifIsSelected] = useState<boolean>(false)
-  const checkoutOrders = props.ArrcheckoutOrdersID
+  const checkoutOrdersID = props.ArrcheckoutOrdersID
+  const checkoutOrdersIDAfterImport = props.checkoutOrdersIDAfterImport
 
 
 
   // Sledovanie ak sa zmeni selected tak bud disable btn alebo nie
   useEffect(() => {
-    if(checkoutOrders.length > 0){
+    if(checkoutOrdersID.length > 0){
       setifIsSelected(false)
     }else {
       setifIsSelected(true)
     }
-  }, [checkoutOrders])
+  }, [checkoutOrdersID])
+
+
+  // Sledovanie ci sa nekliklo na tlacidlo import v checkout.tsx
+  useEffect(() => {
+    if(checkoutOrdersIDAfterImport !== undefined) {
+      if(checkoutOrdersIDAfterImport !== null) {
+        setifIsSelected(false)
+      } else {
+        setifIsSelected(true)
+      }
+    }
+  }, [checkoutOrdersIDAfterImport])
 
 
   // Render

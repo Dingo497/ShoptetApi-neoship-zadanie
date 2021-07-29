@@ -37,6 +37,7 @@ const CheckoutPage = (props: Props) => {
   const checkoutOrdersID = props.checkoutOrdersID
   const checkoutOrdersIDBackToOrders = props.checkoutOrdersIDBackToOrders
 
+  
   // Ak existuje localStorage parsnem a setnem si ho do stateu
   useEffect(() => {
     if(checkoutOrdersID.length > 0){
@@ -105,6 +106,7 @@ const CheckoutPage = (props: Props) => {
         setfinnalyOrdersDetails(finnalyArr)
       })
   }, [allOrdersWithId])
+
 
 
   // Render

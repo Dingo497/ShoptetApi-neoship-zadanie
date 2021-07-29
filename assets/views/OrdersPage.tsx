@@ -57,9 +57,11 @@ const OrdersPage = (props: Props) => {
 
   // Odchytenie filtracnych datumov
   const handleDates = (beginDate:Date, endDate:Date) => {
-    setBeginDate(beginDate.toISOString())
-    setEndDate(endDate.toISOString())
-    setLoading(true)
+    if(beginDate && endDate){
+      setBeginDate(beginDate.toISOString())
+      setEndDate(endDate.toISOString())
+      setLoading(true)
+    }
   }
 
 
@@ -146,28 +148,18 @@ const OrdersPage = (props: Props) => {
     <div>
       <DateSlider filterByDates={handleDates} getBackDates={getBackDates} />
       {/* Ak je nastaveny date tak sprav render a posli date */}
-      {loading === true && 
-        <img src={require('../img/Spin-1s-120px.gif')} 
-        alt="Loading" className={classes.loading}/>
-      }
-      {orders.length > 0 &&
+      {orders.length > 0 ?
         <Orders 
           ArrOrders={orders} 
           ArrcheckoutOrdersID={handleArrcheckoutOrdersID}
           checkoutOrdersIDBackToOrders={checkoutOrdersIDBackToOrders}
         />
+      : loading === true &&
+        <img src={require('../img/Spin-1s-120px.gif')} 
+        alt="Loading" className={classes.loading}/>
       }
     </div>
   )
 }
 
 export default OrdersPage
-
-
-/**
- * TODO
- * - Treba opravit bug s datumom ktory po prvom rerender na ordersPage
- * funguje a hodi tam povodny zadany datum, ale po druhuom rerender
- * mi tam napise zly format datumu treba opravit
- * - Treba potom otestovat appku a upravit pridat komentare
- */

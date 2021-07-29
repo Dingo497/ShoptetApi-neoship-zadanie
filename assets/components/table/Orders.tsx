@@ -66,12 +66,14 @@ const Orders = (props: Props) => {
         headerName: 'Meno',
         flex: 1,
         type: 'string',
+        sortable: false,
       },
       {
         field: 'company',
         headerName: 'Spoločnosť',
         type: 'string',
         flex: 1,
+        sortable: false,
       },
       {
         field: 'phone',
@@ -83,6 +85,7 @@ const Orders = (props: Props) => {
         field: 'creationTime',
         headerName: 'Dátum vytvorenia',
         flex: 1,
+        sortable: false,
       },
       {
         field: 'price',
