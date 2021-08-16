@@ -14,4 +14,8 @@ Je to nedokončený doplnok Shoptetu, ktorý slúži na importovanie objednávok
 Zadanie som robil pomocou Symfony, React, Material UI, Typescript, mierne CSS, OOP PHP a HTML.
 Toto bol môj prvý dotyk s technológiami Symfony, React, Material UI.
 
+## Upozornenie
+Zadanie momentálne nefunguje úplne ako by malo, pretože v mojom zadaní už nemám sprístupnené údaje o doplnku, koncových bodoch,
+prístup na Shoptet testovací e-shop atď.
 
+## Foto doplnku kým som mal údaje
